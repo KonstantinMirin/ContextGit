@@ -1,12 +1,49 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to Claude Code (claude.ai/code) and Cursor when working with code in this repository.
+
+## IMPORTANT: This Project Uses contextgit
+
+**This repository is managed with contextgit.** Before making changes to requirements or documentation:
+
+### Automatic Workflow for AI Assistants
+
+1. **Before modifying requirements/docs:**
+   ```bash
+   contextgit relevant-for-file <path>  # Find related requirements
+   contextgit extract <ID>              # Get precise context
+   ```
+
+2. **After modifying requirements/docs:**
+   ```bash
+   contextgit scan docs/ --recursive    # Update the index
+   contextgit status --stale            # Check for broken links
+   ```
+
+3. **When adding new requirements:**
+   ```bash
+   contextgit next-id <type>            # Generate ID (business, system, architecture, code, test)
+   # Add YAML frontmatter with the generated ID
+   contextgit scan docs/ --recursive    # Register in index
+   ```
+
+4. **When upstream requirements change:**
+   ```bash
+   contextgit status --stale            # Find affected downstream items
+   # Update downstream items as needed
+   contextgit confirm <ID>              # Mark as synchronized
+   ```
+
+### Detection
+Check for `.contextgit/config.yaml` to confirm this is a contextgit-managed project.
+
+---
 
 ## Project Overview
 
-This repository contains the planning documents for **contextgit**, an MVP tool for managing requirements and context traceability in LLM-assisted software projects. The project is currently in **Phase 1: Planning** - no implementation code exists yet, only comprehensive design documentation.
+**contextgit** is a local-first, git-friendly CLI tool for managing requirements and context traceability in LLM-assisted software projects.
 
-**Current Status**: Planning phase complete. Ready for Phase 2 (implementation).
+**Current Status**: v1.0.1 - Production ready, all 10 CLI commands implemented.
 
 ## What contextgit Is
 
