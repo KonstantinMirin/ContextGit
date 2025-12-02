@@ -396,7 +396,7 @@ MIT License - see [LICENSE](LICENSE) file for details.
 
 If you find contextgit useful, consider supporting its development:
 
-<a href="https://www.buymeacoffee.com/mohamedsaleh" target="_blank">
+<a href="https://buymeacoffee.com/saleh_tawfik" target="_blank">
   <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" >
 </a>
 
@@ -410,7 +410,7 @@ Your support helps maintain and improve contextgit! ☕
 
 I build tools for developers. contextgit is one of several open-source projects I maintain.
 
-🌐 **Visit my website**: [mohamedsaleh.dev](https://mohamedsaleh.dev)
+🌐 **Visit my website**: [BySaleh.com](https://BySaleh.com)
 - More open-source projects
 - Technical blog posts
 - Development tutorials
@@ -444,9 +444,9 @@ If you find this project useful, please consider giving it a ⭐ on GitHub!
 
 ---
 
-<p align="center">Made with ❤️ by <a href="https://mohamedsaleh.dev">Mohamed Saleh</a></p>
+<p align="center">Made with ❤️ by <a href="https://BySaleh.com)">Mohamed Saleh</a></p>
 <p align="center">
-  <a href="https://mohamedsaleh.dev">Website</a> •
+  <a href="https://BySaleh.com)">Website</a> •
   <a href="https://github.com/Mohamedsaleh14">GitHub</a> •
-  <a href="https://www.buymeacoffee.com/mohamedsaleh">Buy Me a Coffee</a>
+  <a href="https://buymeacoffee.com/saleh_tawfik">Buy Me a Coffee</a>
 </p>
