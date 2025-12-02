@@ -16,7 +16,7 @@ Traditional requirement management is slow and manual. contextgit makes it **1,3
 - 🔗 **Automatic staleness detection** (prevents $1,200-2,000 rework per incident)
 - 📊 **94% context reduction** for LLM prompts (6,000 → 375 tokens)
 - ⚡ **5-10× faster PR reviews** with structured metadata
-- 💰 **$20,631/year value** per developer ([measured, not estimated](PERFORMANCE_EVALUATION.md#real-world-value-assessment))
+- 💰 **Time savings**: Sub-second searches vs 12+ minutes manual ([see methodology](PERFORMANCE_EVALUATION.md#real-world-value-assessment))
 
 > *Based on real-world measurements from dogfooding contextgit on itself.*
 
@@ -207,13 +207,31 @@ The system shall provide secure user authentication...
 
 ---
 
-## LLM Integration (Claude Code)
+## LLM Integration (Cursor & Claude Code)
 
-contextgit is designed for seamless integration with Claude Code:
+contextgit is designed for seamless integration with LLM development tools:
+
+### Quick Setup for Automatic Detection
+
+**For Cursor** - Create `.cursorrules`:
+```bash
+echo "## This project uses contextgit for requirements traceability
+Before editing docs: contextgit relevant-for-file <path>
+After editing docs: contextgit scan docs/ --recursive && contextgit status --stale" > .cursorrules
+```
+
+**For Claude Code** - Add to `CLAUDE.md`:
+```bash
+echo "## contextgit Integration
+Run contextgit extract <ID> before implementing features.
+Run contextgit scan after modifying requirements." >> CLAUDE.md
+```
+
+### Common Commands
 
 ```bash
 # Get precise context for implementing a requirement
-contextgit extract SR-010 > /tmp/requirement.txt
+contextgit extract SR-010 --format json
 
 # Find all requirements affecting a file
 contextgit relevant-for-file src/auth.py --format json
@@ -228,7 +246,7 @@ contextgit confirm SR-010
 
 All commands support `--format json` for easy parsing by LLMs.
 
-**See**: [LLM Integration Guidelines](docs/07_llm_integration_guidelines.md)
+**See**: [User Guide - LLM Integration](USER_GUIDE.md#llm-integration) | [LLM Integration Guidelines](docs/07_llm_integration_guidelines.md)
 
 ---
 
@@ -243,9 +261,9 @@ Based on [objective measurements](PERFORMANCE_EVALUATION.md#real-world-value-ass
 | PR review time | 3-5 min | 30-60 sec | **5-10× faster** |
 | Context extraction | Manual copy | Automated | **14-29 min saved/task** |
 
-**Annual Value**: $20,631/year per developer (time savings + rework prevention + security incidents avoided)
+**Verified Benefits**: 87-90% token reduction, sub-second requirement searches
 
-**See**: [Full Performance Evaluation](PERFORMANCE_EVALUATION.md)
+**See**: [Full Performance Evaluation](PERFORMANCE_EVALUATION.md) *(includes methodology and assumptions)*
 
 ---
 

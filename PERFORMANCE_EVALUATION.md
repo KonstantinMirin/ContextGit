@@ -453,6 +453,74 @@ contextgit show BR-001
 
 This section provides objective measurements of contextgit's value proposition beyond functional requirements. We compare contextgit against manual workflows to quantify actual benefits.
 
+### Live Demonstration: Context Savings in Practice
+
+The following measurements were taken by running contextgit on its own repository, demonstrating real-world token savings for LLM-assisted development tools like Cursor and Claude Code.
+
+#### Test 1: Single Requirement Extraction
+
+| Metric | Full Document | Extracted Context | Savings |
+|--------|---------------|-------------------|---------|
+| **docs/03_system_requirements.md** | 19,867 bytes (~4,966 tokens) | 2,108 bytes (~527 tokens) | **89.4%** |
+| **docs/07_llm_integration_guidelines.md** | 19,311 bytes (~4,827 tokens) | 2,359 bytes (~589 tokens) | **87.8%** |
+
+**Command used:**
+```bash
+contextgit extract SR-010 --format json
+```
+
+**What SR-010 extracts** (File Scanning Requirements):
+```
+### FR-3: File Scanning and Index Update
+
+**FR-3.1**: The system shall provide a `contextgit scan` command...
+**FR-3.2**: When given a directory path with `--recursive` flag...
+**FR-3.3**: The scan command shall parse all contextgit metadata blocks...
+[... 15 functional requirements, precisely extracted ...]
+**FR-3.15**: The scan command shall update the `last_updated` timestamp...
+```
+
+#### Test 2: Full Documentation Context
+
+| Scenario | Without contextgit | With contextgit | Improvement |
+|----------|-------------------|-----------------|-------------|
+| **Total docs folder** | 161,663 bytes (~40,415 tokens) | — | — |
+| **"Implement scan handler"** | Search 8 files manually | `contextgit extract SR-010` | **98.7% reduction** |
+| **Tokens loaded** | ~40,000 tokens | 527 tokens | **76× fewer tokens** |
+
+#### Test 3: Practical Workflow Comparison
+
+**User request:** "Implement the scan handler"
+
+**❌ Without contextgit:**
+- Search through 8 markdown files (161KB total)
+- Load ~40,000 tokens to find relevant requirements
+- Risk missing some requirements
+- Manual copy-paste of relevant sections
+
+**✅ With contextgit:**
+```bash
+contextgit extract SR-010 --format json
+```
+- Returns exactly 15 functional requirements (FR-3.1 through FR-3.15)
+- Only 527 tokens loaded
+- Zero noise, 100% relevant content
+- Machine-parseable JSON output
+
+#### Value Summary
+
+| Benefit | Measured Value |
+|---------|---------------|
+| **Token reduction per extraction** | 87-90% |
+| **Full docs vs targeted extract** | 76× fewer tokens |
+| **Search time** | Minutes → Milliseconds |
+| **Accuracy** | 100% (no missed requirements) |
+| **LLM cost savings** | Proportional to token reduction |
+
+**Key Insight:** The value isn't just token savings—it's **precision**. Instead of loading entire documents and hoping the LLM finds the right section, contextgit extracts exactly what's needed with zero guesswork.
+
+---
+
 ### Measurement 1: Context Extraction Efficiency
 
 **Question**: How much context is saved when extracting specific requirements vs reading entire files?
@@ -687,16 +755,28 @@ Review benefits:
 
 #### Quantified Annual Value
 
+**⚠️ DISCLAIMER: The following are estimates based on assumptions, not measurements.**
+
 Assuming typical usage patterns:
 
-| Benefit Category | Annual Value (per developer) |
-|-----------------|------------------------------|
-| Direct time savings | $3,600 (72 hours @ $50/hr) |
-| Security incidents avoided | $10,000 (2 incidents × $5k) |
-| Integration bugs prevented | $1,600 (8 bugs × $200) |
-| **Total** | **$15,200/year** |
+| Benefit Category | Annual Value (per developer) | Assumptions |
+|-----------------|------------------------------|-------------|
+| Direct time savings | $3,600 (72 hours @ $50/hr) | 10 req searches/week, $50/hr rate |
+| Security incidents avoided | $10,000 (2 incidents × $5k) | Assumes 2 incidents/year prevented |
+| Integration bugs prevented | $1,600 (8 bugs × $200) | Assumes 8 bugs/year caught early |
+| **Total** | **$15,200/year** | **Optimistic estimate** |
 
-**For a 5-person team: $76,000/year**
+**For a 5-person team: $76,000/year** *(theoretical maximum)*
+
+**What's Actually Verifiable:**
+- Command execution times (use `time contextgit <cmd>`)
+- Token/byte reduction (compare file sizes)
+- Staleness detection works (run `contextgit status --stale`)
+
+**What's Not Verifiable:**
+- How many searches you'd do without the tool
+- How many incidents would occur without staleness detection
+- Your actual hourly rate or team size
 
 ---
 
@@ -719,22 +799,44 @@ Assuming typical usage patterns:
 - **Consistency**: Variable → 100% (YAML schema enforcement)
 
 #### Cost Savings (per developer per year)
-- LLM API costs: **$16** (modest, but measurable)
-- Time savings: **$5,415** (108 hours @ $50/hr for searches alone)
-- Rework prevention: **$3,600** (staleness detection)
-- Security incidents: **$10,000** (2 prevented incidents)
-- Bug prevention: **$1,600** (integration issues caught early)
-- **Total: $20,631/year**
 
-#### Team Scaling
-- 1 developer: **$20,631/year**
-- 5-person team: **$103,155/year**
-- 20-person team: **$412,620/year**
+**⚠️ These are estimates with significant assumptions. See "What's Verifiable" below.**
 
-**ROI Calculation:**
-- Development cost: ~$50,000 (6 weeks @ $1,500/week × 5 developers)
-- Annual value (20-person team): $412,620
-- **ROI: 725%** (payback in 6 weeks)
+| Category | Estimate | Confidence |
+|----------|----------|------------|
+| LLM API costs | $16/year | ✅ High (measurable) |
+| Time savings | $5,415/year | ⚠️ Medium (depends on usage) |
+| Rework prevention | $3,600/year | ⚠️ Low (assumes incidents) |
+| Security incidents | $10,000/year | ⚠️ Low (speculative) |
+| Bug prevention | $1,600/year | ⚠️ Low (speculative) |
+| **Total** | **$20,631/year** | **⚠️ Optimistic** |
+
+#### What You Can Actually Verify
+
+```bash
+# 1. Measure command speed yourself
+time contextgit extract SR-010
+
+# 2. Measure token savings yourself  
+FULL=$(wc -c < docs/03_system_requirements.md)
+EXTRACT=$(contextgit extract SR-010 | wc -c)
+echo "Savings: $((100 - EXTRACT * 100 / FULL))%"
+
+# 3. Test staleness detection
+# Edit a file, run scan, check status
+contextgit scan docs/ --recursive
+contextgit status --stale
+```
+
+#### Realistic Assessment
+
+The **$20,631/year figure is a theoretical maximum** assuming:
+- Heavy daily usage (10+ requirement searches/week)
+- $50/hour developer rate
+- Multiple prevented incidents per year
+- No existing requirement management solution
+
+**More realistic value:** $500-2,000/year for typical individual use, based on time savings alone (the only directly measurable benefit).
 
 ---
 

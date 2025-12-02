@@ -1,0 +1,9 @@
+#!/bin/bash
+# Pre-removal script for contextgit
+set -e
+
+echo "Removing contextgit..."
+# Note: We don't uninstall pip packages as they may be used by other applications
+
+exit 0
+

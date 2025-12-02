@@ -1,0 +1,16 @@
+#!/bin/bash
+# Post-installation script for contextgit
+set -e
+
+# Install Python dependencies using pip
+echo "Installing Python dependencies for contextgit..."
+
+# Install dependencies system-wide using pip (with --break-system-packages for newer Python)
+pip3 install --quiet --break-system-packages typer>=0.9.0 rich>=13.0.0 ruamel.yaml>=0.18.0 2>/dev/null || \
+pip3 install --quiet typer>=0.9.0 rich>=13.0.0 ruamel.yaml>=0.18.0
+
+echo "contextgit installed successfully!"
+echo "Run 'contextgit --help' to get started."
+
+exit 0
+

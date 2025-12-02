@@ -652,13 +652,81 @@ jobs:
 
 ## LLM Integration
 
+contextgit is designed for seamless integration with LLM-assisted development tools like **Cursor** and **Claude Code**.
+
+### Setting Up Automatic Detection
+
+LLM assistants don't automatically know your project uses contextgit. You must tell them via a rules file:
+
+#### For Cursor: Create `.cursorrules`
+
+```bash
+cat > .cursorrules << 'EOF'
+# Cursor Rules for Your Project
+
+## This Project Uses contextgit
+
+Before modifying requirements or documentation:
+1. Run `contextgit relevant-for-file <path>` to find related requirements
+2. Run `contextgit extract <ID>` for precise context
+
+After modifying requirements or documentation:
+1. Run `contextgit scan docs/ --recursive` to update the index
+2. Run `contextgit status --stale` to check for broken links
+
+When adding new requirements:
+1. Generate ID: `contextgit next-id <type>`
+2. Add YAML frontmatter with the generated ID
+3. Run `contextgit scan docs/ --recursive`
+
+Always use `--format json` for parsing output.
+EOF
+```
+
+#### For Claude Code: Create/Update `CLAUDE.md`
+
+```bash
+cat >> CLAUDE.md << 'EOF'
+
+## contextgit Integration
+
+This project uses contextgit for requirements traceability.
+
+**Before implementing features:**
+1. Run `contextgit relevant-for-file <path>` to find relevant requirements
+2. Run `contextgit extract <ID>` for each requirement
+
+**After modifying files:**
+1. Run `contextgit scan <path>` to update traceability
+2. Run `contextgit status --stale` to check for impacts
+
+**When requirements change:**
+1. Run `contextgit status --stale` to find affected items
+2. Update downstream items accordingly
+3. Run `contextgit confirm <ID>` after updates
+EOF
+```
+
+### How Detection Works
+
+| File | Read By | When |
+|------|---------|------|
+| `.cursorrules` | Cursor | Start of every conversation |
+| `CLAUDE.md` | Claude Code | When working on the project |
+| `.contextgit/config.yaml` | Both | Confirms contextgit is initialized |
+
+**Important**: Without these rules files, the AI assistant will NOT automatically use contextgit commands. The rules file tells the AI:
+1. This project uses contextgit
+2. What commands to run before/after changes
+3. The workflow to follow
+
 ### Using with Claude Code
 
 contextgit is designed specifically for Claude Code integration.
 
 #### Automatic Detection
 
-Claude Code will automatically detect contextgit projects if `.contextgit/config.yaml` exists.
+Claude Code will automatically detect contextgit projects if `.contextgit/config.yaml` exists AND you have a `CLAUDE.md` with contextgit instructions.
 
 #### Best Practices for Claude Code
 
