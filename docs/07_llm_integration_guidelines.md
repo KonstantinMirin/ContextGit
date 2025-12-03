@@ -2,13 +2,63 @@
 
 ## Overview
 
-This document provides detailed guidelines for how Large Language Model (LLM) CLIs such as Claude Code should interact with contextgit-managed projects. It includes:
+This document provides detailed guidelines for how Large Language Model (LLM) CLIs such as Claude Code and Cursor should interact with contextgit-managed projects. It includes:
 
+- **Automatic setup** via `contextgit init --setup-llm`
 - Detection mechanisms
 - Command usage patterns
 - Common workflows with step-by-step examples
 - Best practices for context management
 - Error handling
+
+---
+
+## Automatic LLM Integration Setup
+
+### Quick Setup (Recommended)
+
+When initializing a contextgit project, use the `--setup-llm` flag to automatically create LLM integration files:
+
+```bash
+contextgit init --setup-llm
+```
+
+This creates:
+
+| File | Purpose |
+|------|---------|
+| `.contextgit/LLM_INSTRUCTIONS.md` | Comprehensive guide for any LLM (always created) |
+| `.cursorrules` | Cursor IDE auto-detection rules |
+| `CLAUDE.md` | Claude Code integration guide |
+
+### What's in `LLM_INSTRUCTIONS.md`?
+
+The `LLM_INSTRUCTIONS.md` file (~5KB) contains everything an LLM needs:
+
+- What contextgit is and how it works
+- Detection rules
+- Core workflows (before/after modifying docs)
+- Full command reference
+- Metadata format examples
+- Node types and ID prefixes
+- Link sync statuses
+- Best practices
+
+**This eliminates the need for MCP servers** – LLMs read the instructions file directly.
+
+### How LLMs Discover contextgit
+
+1. **Cursor**: Reads `.cursorrules` → sees "Read `.contextgit/LLM_INSTRUCTIONS.md`"
+2. **Claude Code**: Reads `CLAUDE.md` → sees "Read `.contextgit/LLM_INSTRUCTIONS.md`"
+3. **Any LLM**: Can be instructed to read `.contextgit/LLM_INSTRUCTIONS.md`
+
+### For Existing Projects
+
+Add LLM integration to an existing contextgit project:
+
+```bash
+contextgit init --force --setup-llm
+```
 
 ---
 
@@ -18,11 +68,18 @@ This document provides detailed guidelines for how Large Language Model (LLM) CL
 
 An LLM CLI should check for the presence of `.contextgit/config.yaml` at the repository root.
 
+**Files to check (in order):**
+
+1. `.cursorrules` – Cursor reads this automatically
+2. `CLAUDE.md` – Claude Code reads this automatically
+3. `.contextgit/config.yaml` – Confirms contextgit is initialized
+4. `.contextgit/LLM_INSTRUCTIONS.md` – Contains full integration guide
+
 **Algorithm:**
 
 1. When opening a project or starting work, check if `.contextgit/config.yaml` exists
 2. If it exists:
-   - Assume the project is contextgit-managed
+   - Read `.contextgit/LLM_INSTRUCTIONS.md` for workflow guidance
    - Use contextgit conventions when creating or modifying requirements
    - Use contextgit CLI commands to query and update traceability
 3. If it doesn't exist:
@@ -34,9 +91,16 @@ An LLM CLI should check for the presence of `.contextgit/config.yaml` at the rep
 def is_contextgit_project():
     return os.path.exists('.contextgit/config.yaml')
 
+def get_llm_instructions():
+    path = '.contextgit/LLM_INSTRUCTIONS.md'
+    if os.path.exists(path):
+        return open(path).read()
+    return None
+
 if is_contextgit_project():
     print("Detected contextgit-managed project")
-    # Use contextgit workflows
+    instructions = get_llm_instructions()
+    # Use contextgit workflows as described in instructions
 else:
     print("Not a contextgit project")
     # Use standard workflows
