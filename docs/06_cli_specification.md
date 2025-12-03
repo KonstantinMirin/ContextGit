@@ -35,19 +35,26 @@ These options are available for all commands:
 ### Synopsis
 
 ```bash
-contextgit init [OPTIONS]
+contextgit init [OPTIONS] [DIRECTORY]
 ```
 
 ### Description
 
-Initialize a repository to use contextgit. Creates `.contextgit/config.yaml` and `.contextgit/requirements_index.yaml` if they don't exist.
+Initialize a repository to use contextgit. Creates the `.contextgit/` directory with configuration, empty index, and LLM integration guide.
+
+### Arguments
+
+| Argument | Required | Description |
+|----------|----------|-------------|
+| `DIRECTORY` | No | Directory to initialize (default: current directory) |
 
 ### Options
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
-| `--force` | flag | false | Overwrite existing config and index files |
-| `--interactive` / `-i` | flag | false | Prompt for configuration values |
+| `--force` / `-f` | flag | false | Overwrite existing config and index files |
+| `--setup-llm` | flag | false | Also create `.cursorrules` and `CLAUDE.md` for LLM integration |
+| `--format` | text | text | Output format: `text` or `json` |
 
 ### Behavior
 
@@ -55,9 +62,24 @@ Initialize a repository to use contextgit. Creates `.contextgit/config.yaml` and
    - If exists and `--force` not set: Error
    - If exists and `--force` set: Overwrite files
 2. Create `.contextgit/` directory
-3. Create `config.yaml` with default or user-provided values
+3. Create `config.yaml` with default values
 4. Create empty `requirements_index.yaml` with `nodes: []` and `links: []`
-5. Print success message
+5. Create `LLM_INSTRUCTIONS.md` with comprehensive LLM integration guide
+6. If `--setup-llm` is set:
+   - Create `.cursorrules` for Cursor IDE auto-detection
+   - Create or append to `CLAUDE.md` for Claude Code integration
+7. Print success message
+
+### Files Created
+
+**Always created in `.contextgit/`:**
+- `config.yaml` - Configuration settings
+- `requirements_index.yaml` - Empty requirements index
+- `LLM_INSTRUCTIONS.md` - Comprehensive LLM integration guide (~5KB)
+
+**With `--setup-llm` (in project root):**
+- `.cursorrules` - Cursor IDE rules file
+- `CLAUDE.md` - Claude Code integration guide
 
 ### Exit Codes
 
@@ -72,28 +94,55 @@ Initialize a repository to use contextgit. Creates `.contextgit/config.yaml` and
 $ contextgit init
 Created .contextgit/config.yaml
 Created .contextgit/requirements_index.yaml
+Created .contextgit/LLM_INSTRUCTIONS.md
+Repository initialized for contextgit.
+
+Tip: Run 'contextgit init --setup-llm' to also create
+     .cursorrules and CLAUDE.md for LLM integration.
+```
+
+**With LLM integration (recommended):**
+```bash
+$ contextgit init --setup-llm
+Created .contextgit/config.yaml
+Created .contextgit/requirements_index.yaml
+Created .contextgit/LLM_INSTRUCTIONS.md
+Created .cursorrules
+Created CLAUDE.md
+Repository initialized for contextgit.
+
+LLM integration files created:
+  - .cursorrules (for Cursor)
+  - CLAUDE.md (for Claude Code)
+```
+
+**Force overwrite with LLM integration:**
+```bash
+$ contextgit init --force --setup-llm
+Created .contextgit/config.yaml
+Created .contextgit/requirements_index.yaml
+Created .contextgit/LLM_INSTRUCTIONS.md
+Created .cursorrules
+Created CLAUDE.md
 Repository initialized for contextgit.
 ```
 
-**Interactive mode:**
+**JSON output:**
 ```bash
-$ contextgit init --interactive
-Repository not found. Initialize contextgit? [y/N] y
-Business requirements directory [docs/01_business]:
-System requirements directory [docs/02_system]:
-...
-Created .contextgit/config.yaml
-Created .contextgit/requirements_index.yaml
-Repository initialized for contextgit.
-```
-
-**Force overwrite:**
-```bash
-$ contextgit init --force
-Warning: Overwriting existing .contextgit/ directory
-Created .contextgit/config.yaml
-Created .contextgit/requirements_index.yaml
-Repository initialized for contextgit.
+$ contextgit init --setup-llm --format json
+{
+  "status": "success",
+  "directory": "/path/to/project",
+  "files_created": [
+    ".contextgit/config.yaml",
+    ".contextgit/requirements_index.yaml",
+    ".contextgit/LLM_INSTRUCTIONS.md",
+    ".cursorrules",
+    "CLAUDE.md"
+  ],
+  "setup_llm": true,
+  "message": "Initialized contextgit repository"
+}
 ```
 
 ---
