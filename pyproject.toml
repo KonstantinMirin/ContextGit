@@ -1,11 +1,42 @@
 [project]
 name = "contextgit"
-version = "0.1.0"
-description = "CLI tool for managing requirements traceability in LLM-assisted software projects"
-authors = [{name = "Your Name", email = "your.email@example.com"}]
+version = "1.0.3"
+description = "Requirements traceability for LLM-assisted software development. Track relationships from business needs through system specs, architecture, code, and tests."
+authors = [{name = "Saleh", email = "saleh@cronlytic.com"}]
+maintainers = [{name = "Saleh", email = "saleh@cronlytic.com"}]
 readme = "README.md"
 requires-python = ">=3.11"
 license = {text = "MIT"}
+keywords = [
+    "requirements",
+    "traceability",
+    "llm",
+    "ai",
+    "documentation",
+    "software-engineering",
+    "cli",
+    "markdown",
+    "yaml",
+    "claude",
+    "cursor",
+    "development-tools",
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development",
+    "Topic :: Software Development :: Documentation",
+    "Topic :: Software Development :: Quality Assurance",
+    "Topic :: Text Processing :: Markup :: Markdown",
+    "Typing :: Typed",
+]
 
 dependencies = [
     "typer>=0.9.0",
@@ -25,14 +56,30 @@ dev = [
     "black>=23.0.0",
     "mypy>=1.5.0",
     "pre-commit>=3.4.0",
+    "build>=1.0.0",
+    "twine>=4.0.0",
 ]
 
 [project.scripts]
 contextgit = "contextgit.__main__:main"
 
+[project.urls]
+Homepage = "https://github.com/Mohamedsaleh14/ContextGit"
+Documentation = "https://github.com/Mohamedsaleh14/ContextGit#readme"
+Repository = "https://github.com/Mohamedsaleh14/ContextGit.git"
+Issues = "https://github.com/Mohamedsaleh14/ContextGit/issues"
+Changelog = "https://github.com/Mohamedsaleh14/ContextGit/releases"
+"Buy Me a Coffee" = "https://buymeacoffee.com/saleh_tawfik"
+
 [build-system]
 requires = ["setuptools>=68.0", "wheel"]
 build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["contextgit", "contextgit.cli", "contextgit.domain", "contextgit.domain.checksum", "contextgit.domain.config", "contextgit.domain.id_gen", "contextgit.domain.index", "contextgit.domain.linking", "contextgit.domain.location", "contextgit.domain.metadata", "contextgit.handlers", "contextgit.infra", "contextgit.models"]
+
+[tool.setuptools.package-data]
+contextgit = ["py.typed"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
@@ -44,6 +91,10 @@ addopts = "-v --cov=contextgit --cov-report=term-missing"
 [tool.ruff]
 line-length = 100
 target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W", "UP", "B", "C4", "DTZ", "T10", "ISC"]
+ignore = ["E501"]
 
 [tool.mypy]
 python_version = "3.11"
