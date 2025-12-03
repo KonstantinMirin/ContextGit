@@ -81,8 +81,15 @@ contextgit --help
 ## Quick Start
 
 ```bash
-# 1. Initialize a contextgit repository
-contextgit init
+# 1. Initialize a contextgit repository (with LLM integration)
+contextgit init --setup-llm
+
+# This creates:
+# - .contextgit/config.yaml
+# - .contextgit/requirements_index.yaml
+# - .contextgit/LLM_INSTRUCTIONS.md  ← LLM reads this
+# - .cursorrules                      ← Cursor auto-detects
+# - CLAUDE.md                         ← Claude Code auto-detects
 
 # 2. Add metadata to your Markdown files
 cat > docs/requirements.md << 'EOF'
@@ -122,6 +129,7 @@ contextgit extract BR-001
 
 ```bash
 contextgit init                      # Initialize repository
+contextgit init --setup-llm          # Initialize + create LLM integration files
 contextgit scan docs/ --recursive    # Scan for metadata
 contextgit scan --dry-run            # Preview changes
 ```
@@ -209,23 +217,26 @@ The system shall provide secure user authentication...
 
 ## LLM Integration (Cursor & Claude Code)
 
-contextgit is designed for seamless integration with LLM development tools:
+contextgit is designed for seamless integration with LLM development tools.
 
-### Quick Setup for Automatic Detection
+### Automatic Setup (Recommended)
 
-**For Cursor** - Create `.cursorrules`:
 ```bash
-echo "## This project uses contextgit for requirements traceability
-Before editing docs: contextgit relevant-for-file <path>
-After editing docs: contextgit scan docs/ --recursive && contextgit status --stale" > .cursorrules
+contextgit init --setup-llm
 ```
 
-**For Claude Code** - Add to `CLAUDE.md`:
-```bash
-echo "## contextgit Integration
-Run contextgit extract <ID> before implementing features.
-Run contextgit scan after modifying requirements." >> CLAUDE.md
-```
+This creates all LLM integration files automatically:
+
+| File | Purpose |
+|------|---------|
+| `.contextgit/LLM_INSTRUCTIONS.md` | Comprehensive guide for any LLM (~5KB) |
+| `.cursorrules` | Cursor IDE auto-detection |
+| `CLAUDE.md` | Claude Code auto-detection |
+
+**How it works:**
+1. Cursor reads `.cursorrules` → knows to use contextgit
+2. Claude reads `CLAUDE.md` → knows to use contextgit
+3. Both are directed to `LLM_INSTRUCTIONS.md` for full details
 
 ### Common Commands
 
