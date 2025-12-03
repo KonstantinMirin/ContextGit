@@ -4,8 +4,11 @@
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
+[![Website](https://img.shields.io/badge/website-contextgit.com-blue)](https://contextgit.com)
 
 **Requirements traceability for LLM-assisted software development**
+
+🌐 **Official Website**: [contextgit.com](https://contextgit.com)
 
 contextgit is a local-first, git-friendly CLI tool that maintains bidirectional traceability between business requirements, system specifications, architecture decisions, source code, and tests. Designed specifically for integration with Claude Code and similar LLM development assistants.
 
@@ -439,6 +442,7 @@ I build tools for developers. contextgit is one of several open-source projects 
 
 ## Links
 
+- **Official Website**: https://contextgit.com
 - **PyPI**: https://pypi.org/project/contextgit/
 - **Repository**: https://github.com/Mohamedsaleh14/ContextGit
 - **Issues**: https://github.com/Mohamedsaleh14/ContextGit/issues
