@@ -1,5 +1,6 @@
 # contextgit
 
+[![PyPI version](https://img.shields.io/pypi/v/contextgit.svg)](https://pypi.org/project/contextgit/)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
@@ -49,7 +50,13 @@ Traditional requirement management is slow and manual. contextgit makes it **1,3
 
 ## Installation
 
-### Option 1: From Source (Recommended for now)
+### Option 1: PyPI (Recommended)
+
+```bash
+pip install contextgit
+```
+
+### Option 2: From Source
 
 ```bash
 git clone https://github.com/Mohamedsaleh14/ContextGit.git
@@ -57,20 +64,14 @@ cd ContextGit
 pip install -e .
 ```
 
-### Option 2: Ubuntu/Debian Package
+### Option 3: Ubuntu/Debian Package
 
 ```bash
 # Download the .deb package from releases
-wget https://github.com/Mohamedsaleh14/ContextGit/releases/download/v1.0.0/contextgit_1.0.0_all.deb
+wget https://github.com/Mohamedsaleh14/ContextGit/releases/download/v1.0.2/contextgit_1.0.2_all.deb
 
 # Install
-sudo dpkg -i contextgit_1.0.0_all.deb
-```
-
-### Option 3: PyPI (Coming Soon)
-
-```bash
-pip install contextgit
+sudo dpkg -i contextgit_1.0.2_all.deb
 ```
 
 ### Verify Installation
@@ -310,7 +311,6 @@ Based on [objective measurements](PERFORMANCE_EVALUATION.md#real-world-value-ass
   - `typer` >= 0.9.0 (CLI framework)
   - `rich` >= 13.0.0 (terminal output)
   - `ruamel.yaml` >= 0.18.0 (YAML handling)
-  - `markdown-it-py` (Markdown parsing)
 
 ---
 
@@ -443,6 +443,7 @@ I build tools for developers. contextgit is one of several open-source projects 
 ## Links
 
 - **Official Website**: https://contextgit.com
+- **PyPI**: https://pypi.org/project/contextgit/
 - **Repository**: https://github.com/Mohamedsaleh14/ContextGit
 - **Issues**: https://github.com/Mohamedsaleh14/ContextGit/issues
 - **Releases**: https://github.com/Mohamedsaleh14/ContextGit/releases

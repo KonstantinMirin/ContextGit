@@ -8,7 +8,7 @@ nodes:
     path:
     - Architecture Overview
   status: active
-  last_updated: '2025-12-03T03:22:32.569850+00:00'
+  last_updated: '2025-12-03T14:18:33.433993+00:00'
   checksum: bdf953ed32764ef21638d1a51fd62f032ec33b03a5266453c51632eb6328a569
   llm_generated: false
   tags:
@@ -24,7 +24,7 @@ nodes:
     path:
     - Product Overview
   status: active
-  last_updated: '2025-12-03T03:22:32.571284+00:00'
+  last_updated: '2025-12-03T14:18:33.435278+00:00'
   checksum: adaaf9cb84de446df79b798a9d8905547bdd7b2be86aabe3354683536a64ea32
   llm_generated: false
   tags:
@@ -42,7 +42,7 @@ nodes:
     - Common Workflows
     - 'Workflow 4: Update an Existing Requirement'
   status: active
-  last_updated: '2025-12-03T03:22:32.561762+00:00'
+  last_updated: '2025-12-03T14:18:33.427870+00:00'
   checksum: d3305d11938e749153a35f82adb2df5efd100edb81b979355d3988168b5c9c67
   llm_generated: false
   tags: []
@@ -57,7 +57,7 @@ nodes:
     - Functional Requirements
     - 'FR-3: File Scanning and Index Update'
   status: active
-  last_updated: '2025-12-03T03:22:43.659499+00:00'
+  last_updated: '2025-12-03T14:19:05.701928+00:00'
   checksum: 2f8794e906c4be0a1d9fe329fd0198896fa429d1276cf16e25ad182d9c9cdb8e
   llm_generated: false
   tags: []
@@ -71,7 +71,7 @@ nodes:
     - System Design – Logging
     - JSON Output Schemas
   status: active
-  last_updated: '2025-12-03T03:22:32.558717+00:00'
+  last_updated: '2025-12-03T14:18:33.424928+00:00'
   checksum: 0d963c820645a577d10cff54353aab770f6231b339194233d1220d515f56c208
   llm_generated: false
   tags: []
@@ -84,7 +84,7 @@ nodes:
     path:
     - System Requirements
   status: active
-  last_updated: '2025-12-03T03:22:32.566564+00:00'
+  last_updated: '2025-12-03T14:18:33.431240+00:00'
   checksum: 577273ca286dac79d57f128e8050d058b0acbd46298367acd0152e084d9be6d8
   llm_generated: false
   tags:
@@ -101,7 +101,7 @@ nodes:
     - 'Good: Extract specific requirement'
     - Best Practices for LLMs
   status: active
-  last_updated: '2025-12-03T03:22:32.562750+00:00'
+  last_updated: '2025-12-03T14:18:33.428604+00:00'
   checksum: 0f3b10acc82b01a8bc93857f285a2680cccc8e9b8132b25185ef2118f54f3e80
   llm_generated: false
   tags: []
@@ -110,19 +110,19 @@ links:
   to: SR-010
   relation_type: refines
   sync_status: ok
-  last_checked: '2025-12-03T03:22:43.659499+00:00'
+  last_checked: '2025-12-03T14:19:05.701928+00:00'
 - from: BR-001
   to: SR-012
   relation_type: refines
   sync_status: ok
-  last_checked: '2025-12-03T03:22:32.571299+00:00'
+  last_checked: '2025-12-03T14:18:33.435294+00:00'
 - from: C-050
   to: T-025
   relation_type: tests
   sync_status: ok
-  last_checked: '2025-12-03T03:22:32.571299+00:00'
+  last_checked: '2025-12-03T14:18:33.435294+00:00'
 - from: C-050
   to: T-025
   relation_type: tests
   sync_status: ok
-  last_checked: '2025-12-03T03:22:32.571299+00:00'
+  last_checked: '2025-12-03T14:18:33.435294+00:00'
