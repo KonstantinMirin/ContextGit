@@ -1,3 +1,14 @@
+---
+contextgit:
+  id: SR-016
+  type: system
+  title: Test strategy and quality assurance plan
+  status: active
+  upstream:
+    - SR-012
+  tags: [mvp, testing, qa]
+---
+
 # Test Strategy Document
 
 ## 1. Introduction

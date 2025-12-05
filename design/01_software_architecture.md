@@ -1,3 +1,14 @@
+---
+contextgit:
+  id: AR-003
+  type: architecture
+  title: Software architecture document for contextgit
+  status: active
+  upstream:
+    - SR-012
+  tags: [mvp, architecture, modules]
+---
+
 # Software Architecture Document
 
 ## 1. Introduction

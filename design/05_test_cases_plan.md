@@ -1,3 +1,14 @@
+---
+contextgit:
+  id: T-026
+  type: test
+  title: Comprehensive test cases plan
+  status: active
+  upstream:
+    - SR-016
+  tags: [mvp, test-cases, qa]
+---
+
 # Test Cases Plan
 
 ## 1. Introduction

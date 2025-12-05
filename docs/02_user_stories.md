@@ -1,3 +1,14 @@
+---
+contextgit:
+  id: BR-002
+  type: business
+  title: User stories and personas for contextgit
+  status: active
+  upstream:
+    - BR-001
+  tags: [mvp, user-stories, personas]
+---
+
 # User Stories
 
 ## Developer Personas

@@ -1,3 +1,14 @@
+---
+contextgit:
+  id: SR-014
+  type: system
+  title: CLI command specifications for contextgit
+  status: active
+  upstream:
+    - SR-012
+  tags: [mvp, cli, specification]
+---
+
 # CLI Specification
 
 ## Overview
