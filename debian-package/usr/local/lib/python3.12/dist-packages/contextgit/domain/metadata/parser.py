@@ -1,4 +1,13 @@
-"""Metadata parsing from Markdown files."""
+"""Metadata parsing from Markdown files.
+
+contextgit:
+  id: C-117
+  type: code
+  title: "Metadata Parser - YAML Frontmatter and HTML Comments"
+  status: active
+  upstream: [SR-012]
+  tags: [domain, parsing, fr-2, yaml-frontmatter]
+"""
 
 import re
 from dataclasses import dataclass, field

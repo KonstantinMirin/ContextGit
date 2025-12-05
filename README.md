@@ -34,18 +34,28 @@ Traditional requirement management is slow and manual. contextgit makes it **1,3
 - **Staleness Detection**: Automatically detect when upstream requirements change via checksum comparison
 - **Precise Context Extraction**: Extract only relevant requirements for LLM consumption
 - **Bidirectional Links**: Automatically maintain upstream/downstream relationships
+- **Impact Analysis**: Analyze downstream effects of requirement changes (v1.2+)
+- **Circular Dependency Detection**: Validate link integrity (v1.2+)
 
 🎯 **LLM-Optimized**
 - JSON output for all commands (`--format json`)
 - Sub-second requirement searches
 - Extract command for precise context snippets
 - Designed for Claude Code workflows
+- **MCP Server**: Native Model Context Protocol integration for Claude Desktop (v1.2+)
 
 🛠️ **Developer-Friendly**
 - **Git-Friendly**: Metadata in Markdown YAML frontmatter and HTML comments
 - **Local-First**: All data in `.contextgit/requirements_index.yaml` - no network calls
 - **Deterministic Output**: Sorted YAML for clean git diffs
 - **Atomic Operations**: Never corrupts index file
+- **Git Hooks**: Automatic scanning on commit/merge (v1.2+)
+- **Watch Mode**: Real-time file monitoring (v1.2+)
+
+📁 **Multi-Format Support** (v1.2+)
+- **Markdown** (.md) - YAML frontmatter and HTML comments
+- **Python** (.py) - Docstrings and comment blocks
+- **JavaScript/TypeScript** (.js, .ts, .jsx, .tsx) - JSDoc blocks
 
 ---
 
@@ -55,6 +65,11 @@ Traditional requirement management is slow and manual. contextgit makes it **1,3
 
 ```bash
 pip install contextgit
+
+# With optional features (v1.2+)
+pip install contextgit[watch]     # Watch mode (file monitoring)
+pip install contextgit[mcp]       # MCP server for Claude Desktop
+pip install contextgit[all]       # All optional features
 ```
 
 ### Option 2: From Source
@@ -69,10 +84,10 @@ pip install -e .
 
 ```bash
 # Download the .deb package from releases
-wget https://github.com/Mohamedsaleh14/ContextGit/releases/download/v1.1.0/contextgit_1.1.0_all.deb
+wget https://github.com/Mohamedsaleh14/ContextGit/releases/download/v1.2.0/contextgit_1.2.0_all.deb
 
 # Install
-sudo dpkg -i contextgit_1.1.0_all.deb
+sudo dpkg -i contextgit_1.2.0_all.deb
 ```
 
 ### Verify Installation
@@ -164,6 +179,29 @@ contextgit fmt                       # Format index for git
 contextgit show SR-010 --format json # JSON output for LLMs
 ```
 
+### Validation and Analysis (v1.2+)
+
+```bash
+contextgit validate docs/ --recursive  # Validate metadata without modifying index
+contextgit impact SR-010               # Show downstream impact analysis
+contextgit impact SR-010 --format json # JSON output for CI/CD
+```
+
+### Automation (v1.2+)
+
+```bash
+contextgit hooks install             # Install git hooks (pre-commit, post-merge)
+contextgit hooks status              # Check hook installation status
+contextgit hooks uninstall           # Remove git hooks
+contextgit watch docs/               # Watch for file changes (requires watchdog)
+```
+
+### MCP Server (v1.2+)
+
+```bash
+contextgit mcp-server                # Start MCP server for Claude Desktop
+```
+
 ---
 
 ## Metadata Format
@@ -203,6 +241,36 @@ upstream: [BR-001]
 ## User Authentication
 
 The system shall provide secure user authentication...
+```
+
+### Python Docstrings (v1.2+)
+
+```python
+"""
+contextgit:
+  id: C-001
+  type: code
+  title: Authentication module
+  upstream: [SR-010]
+"""
+
+def authenticate(email: str, password: str) -> bool:
+    ...
+```
+
+### JavaScript/TypeScript JSDoc (v1.2+)
+
+```javascript
+/**
+ * @contextgit
+ * id: C-002
+ * type: code
+ * title: Login handler
+ * upstream: [SR-010]
+ */
+export function handleLogin(req, res) {
+    ...
+}
 ```
 
 ---
@@ -308,10 +376,15 @@ Based on [objective measurements](PERFORMANCE_EVALUATION.md#real-world-value-ass
 ## Requirements
 
 - **Python**: 3.11 or higher
-- **Dependencies**:
+- **Core Dependencies**:
   - `typer` >= 0.9.0 (CLI framework)
   - `rich` >= 13.0.0 (terminal output)
   - `ruamel.yaml` >= 0.18.0 (YAML handling)
+
+- **Optional Dependencies** (v1.2+):
+  - `watchdog` >= 3.0.0 (watch mode - `pip install contextgit[watch]`)
+  - `mcp` >= 0.1.0 (MCP server - `pip install contextgit[mcp]`)
+  - `pydantic` >= 2.0.0 (MCP schemas - included with mcp)
 
 ---
 
@@ -343,7 +416,9 @@ contextgit/
 ├── handlers/     # Command handlers (InitHandler, ScanHandler, etc.)
 ├── domain/       # Core domain (IndexManager, MetadataParser, LinkingEngine, etc.)
 ├── infra/        # Infrastructure (FileSystem, YAMLSerializer, OutputFormatter)
-└── models/       # Data models (Node, Link, Index, Config)
+├── models/       # Data models (Node, Link, Index, Config)
+├── scanners/     # File format scanners (v1.2+: Markdown, Python, JavaScript)
+└── mcp/          # MCP server implementation (v1.2+)
 ```
 
 **Architecture**: 4-layer design (CLI → Handlers → Domain → Infrastructure)
@@ -364,12 +439,11 @@ Contributions are welcome! This is an MVP with many opportunities for enhancemen
 
 ### Areas for Contribution
 
-- Performance optimization (daemon mode, lazy loading)
-- Additional metadata formats (ReStructuredText, AsciiDoc)
 - VS Code extension
-- Watch mode for auto-scanning
-- Code-level parsing (auto-link Python functions to requirements)
-- CI/CD integrations
+- Additional file formats (ReStructuredText, AsciiDoc)
+- Performance optimization (daemon mode, lazy loading)
+- CI/CD integrations (GitHub Action, GitLab CI template)
+- Coverage reporting and analytics
 
 **See**: [MVP Scope and Future Work](docs/08_mvp_scope_and_future_work.md)
 
@@ -377,24 +451,31 @@ Contributions are welcome! This is an MVP with many opportunities for enhancemen
 
 ## Roadmap
 
-### Phase 1: MVP ✅ (Complete)
+### Phase 1: MVP ✅ (v1.0 - Complete)
 - All 10 CLI commands
 - Metadata parsing (YAML frontmatter + HTML comments)
 - Traceability graph with staleness detection
 - JSON output for LLM integration
 - Git-friendly YAML output
 
-### Phase 2: Enhanced Tooling (Planned)
+### Phase 1.2: Enhanced Features ✅ (v1.2 - Complete)
+- Multi-format file support (Python, JavaScript/TypeScript)
+- Watch mode for auto-scanning
+- Git hooks integration (pre-commit, post-merge, pre-push)
+- Metadata validation command
+- Impact analysis command
+- MCP Server for Claude Desktop integration
+- Circular dependency detection
+- Enhanced link validation
+
+### Phase 2: IDE Integration (Planned)
 - VS Code extension
 - Daemon mode for performance
-- Watch mode for auto-scanning
-- Additional file format support
 - Parallel file scanning
 
 ### Phase 3: Team Collaboration (Future)
-- Git hooks for enforcement
-- CI integration for blocking stale PRs
-- Diff reports between branches
+- CI integration (GitHub Action, GitLab CI)
+- Coverage reporting
 - Team analytics
 
 **See**: [Full Roadmap](docs/08_mvp_scope_and_future_work.md)

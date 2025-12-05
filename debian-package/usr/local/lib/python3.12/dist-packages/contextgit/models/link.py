@@ -1,11 +1,19 @@
 """Link model for contextgit.
 
+contextgit:
+  id: C-125
+  type: code
+  title: "Link Model - Traceability Relationship Definition"
+  status: active
+  upstream: [SR-012]
+  tags: [models, dataclass, fr-4, traceability]
+
 This module defines the Link class, representing a traceability relationship
 between two nodes. Links track upstream/downstream relationships and their
 synchronization status.
 """
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from .enums import RelationType, SyncStatus
 
 
@@ -24,6 +32,8 @@ class Link:
         relation_type: Type of relationship (refines, implements, tests, etc.)
         sync_status: Synchronization status (ok, upstream_changed, etc.)
         last_checked: ISO 8601 timestamp of last synchronization check
+        skip_validation: If True, skip validation in __post_init__ (use when
+                         validation has already been done by LinkingEngine)
     """
 
     from_id: str  # Source node ID (upstream)
@@ -31,13 +41,28 @@ class Link:
     relation_type: RelationType
     sync_status: SyncStatus
     last_checked: str  # ISO 8601 timestamp
+    skip_validation: bool = field(default=False, repr=False, compare=False)
 
     def __post_init__(self):
-        """Validate link data."""
+        """Validate link data.
+
+        Basic validation is always performed (non-empty IDs).
+        Self-reference validation is skipped if skip_validation is True,
+        which allows LinkingEngine to perform more sophisticated validation
+        that considers file context (same-file parent-child links are allowed).
+        """
         if not self.from_id or not self.to_id:
             raise ValueError("Link IDs cannot be empty")
-        if self.from_id == self.to_id:
-            raise ValueError("Self-referential link not allowed")
+
+        # Only perform basic self-reference check if validation not skipped
+        # When skip_validation is True, LinkingEngine has already validated
+        # with file context (allowing same-file parent-child relationships)
+        if not self.skip_validation and self.from_id == self.to_id:
+            raise ValueError(
+                f"Self-referential link not allowed: {self.from_id} -> {self.to_id}\n"
+                "Note: Use LinkingEngine.validate_link() for file-aware validation "
+                "that allows same-file parent-child relationships."
+            )
 
     def to_dict(self) -> dict:
         """Convert to dictionary for YAML serialization.

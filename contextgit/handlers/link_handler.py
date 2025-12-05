@@ -1,4 +1,13 @@
-"""Handler for contextgit link command."""
+"""Handler for contextgit link command.
+
+contextgit:
+  id: C-106
+  type: code
+  title: "Link Handler - Manual Link Management"
+  status: active
+  upstream: [SR-012]
+  tags: [cli, linking, fr-8, traceability]
+"""
 
 import json
 import typer

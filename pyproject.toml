@@ -1,6 +1,6 @@
 [project]
 name = "contextgit"
-version = "1.1.0"
+version = "1.2.0"
 description = "Requirements traceability for LLM-assisted software development. Track relationships from business needs through system specs, architecture, code, and tests."
 authors = [{name = "Saleh", email = "saleh@cronlytic.com"}]
 maintainers = [{name = "Saleh", email = "saleh@cronlytic.com"}]
@@ -59,9 +59,22 @@ dev = [
     "build>=1.0.0",
     "twine>=4.0.0",
 ]
+mcp = [
+    "mcp>=0.1.0",
+    "pydantic>=2.0.0",
+]
+watch = [
+    "watchdog>=3.0.0",
+]
+all = [
+    "watchdog>=3.0.0",
+    "mcp>=0.1.0",
+    "pydantic>=2.0.0",
+]
 
 [project.scripts]
 contextgit = "contextgit.__main__:main"
+contextgit-mcp = "contextgit.mcp.server:main"
 
 [project.urls]
 Homepage = "https://github.com/Mohamedsaleh14/ContextGit"
@@ -76,7 +89,7 @@ requires = ["setuptools>=68.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
-packages = ["contextgit", "contextgit.cli", "contextgit.domain", "contextgit.domain.checksum", "contextgit.domain.config", "contextgit.domain.id_gen", "contextgit.domain.index", "contextgit.domain.linking", "contextgit.domain.location", "contextgit.domain.metadata", "contextgit.handlers", "contextgit.infra", "contextgit.models"]
+packages = ["contextgit", "contextgit.cli", "contextgit.domain", "contextgit.domain.checksum", "contextgit.domain.config", "contextgit.domain.id_gen", "contextgit.domain.index", "contextgit.domain.linking", "contextgit.domain.location", "contextgit.domain.metadata", "contextgit.handlers", "contextgit.infra", "contextgit.models", "contextgit.scanners", "contextgit.mcp"]
 
 [tool.setuptools.package-data]
 contextgit = ["py.typed"]

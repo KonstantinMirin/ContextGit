@@ -1,4 +1,13 @@
-"""Checksum calculation for content change detection."""
+"""Checksum calculation for content change detection.
+
+contextgit:
+  id: C-118
+  type: code
+  title: "Checksum Calculator - SHA-256 Change Detection"
+  status: active
+  upstream: [SR-012]
+  tags: [domain, checksum, fr-3, staleness-detection]
+"""
 
 import hashlib
 

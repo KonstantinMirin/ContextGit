@@ -1,4 +1,13 @@
-"""Handler for contextgit confirm command."""
+"""Handler for contextgit confirm command.
+
+contextgit:
+  id: C-107
+  type: code
+  title: "Confirm Handler - Synchronization Confirmation"
+  status: active
+  upstream: [SR-012]
+  tags: [cli, confirm, fr-9, sync-status]
+"""
 
 import json
 from datetime import datetime, timezone

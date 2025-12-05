@@ -1,5 +1,13 @@
 """Location resolution for metadata blocks.
 
+contextgit:
+  id: C-121
+  type: code
+  title: "Location Resolver - Metadata Block Location"
+  status: active
+  upstream: [SR-012]
+  tags: [domain, location, fr-4, markdown]
+
 This module provides functionality for resolving the location of metadata blocks
 within Markdown files, determining whether they should be identified by heading
 path or line range.

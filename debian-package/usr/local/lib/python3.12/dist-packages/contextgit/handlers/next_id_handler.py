@@ -1,4 +1,13 @@
-"""Handler for contextgit next-id command."""
+"""Handler for contextgit next-id command.
+
+contextgit:
+  id: C-108
+  type: code
+  title: "Next-ID Handler - Sequential ID Generation"
+  status: active
+  upstream: [SR-012]
+  tags: [cli, id-generation, fr-10]
+"""
 
 import json
 import typer

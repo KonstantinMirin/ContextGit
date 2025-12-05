@@ -112,6 +112,57 @@ The MVP is defined as:
 - ✅ Sort links by (from, to)
 - ✅ Deterministic YAML formatting
 
+#### 14. Multi-Format File Support (v1.2+)
+- ✅ Python file scanning (.py, .pyw) with docstring and comment formats
+- ✅ JavaScript/TypeScript scanning (.js, .jsx, .ts, .tsx, .mjs, .cjs) with JSDoc format
+- ✅ Extensible scanner architecture
+- ✅ Automatic scanner selection by file extension
+
+#### 15. Metadata Validation (v1.2+)
+- ✅ `contextgit validate` command
+- ✅ Self-reference detection
+- ✅ Missing target detection
+- ✅ Duplicate ID detection
+- ✅ Orphan node detection
+- ✅ Circular dependency detection
+- ✅ JSON output for CI integration
+
+#### 16. Impact Analysis (v1.2+)
+- ✅ `contextgit impact <ID>` command
+- ✅ Direct and indirect downstream analysis
+- ✅ Tree, JSON, and checklist output formats
+- ✅ Affected files reporting
+- ✅ Action suggestions
+
+#### 17. Git Hooks Integration (v1.2+)
+- ✅ `contextgit hooks install/uninstall/status` commands
+- ✅ Pre-commit hook (scan changed files)
+- ✅ Post-merge hook (full scan)
+- ✅ Pre-push hook (optional)
+- ✅ Idempotent installation
+- ✅ Custom hook preservation
+- ✅ `--files` option for scan command
+
+#### 18. Watch Mode (v1.2+)
+- ✅ `contextgit watch` command
+- ✅ File system monitoring with watchdog
+- ✅ Debouncing for rapid changes
+- ✅ Graceful shutdown
+- ✅ Optional dependency handling
+
+#### 19. MCP Server Integration (v1.2+)
+- ✅ `contextgit mcp-server` command
+- ✅ 5 MCP tools (relevant_for_file, extract, status, impact_analysis, search)
+- ✅ 2 MCP resources (index, llm-instructions)
+- ✅ stdio transport for Claude Code
+- ✅ Pydantic response schemas
+
+#### 20. Link Validation Enhancements (v1.2+)
+- ✅ Same-file parent-child links allowed
+- ✅ True self-reference blocking
+- ✅ Cross-file circular dependency detection
+- ✅ Clear error messages distinguishing cases
+
 ### Non-Functional Requirements (MVP)
 
 #### Platform Support
@@ -173,12 +224,12 @@ The MVP is defined as:
 #### 1. Advanced File Format Support
 - ❌ ReStructuredText (RST) parsing
 - ❌ AsciiDoc parsing
-- ❌ Parsing metadata from source code comments (Python docstrings, JSDoc, etc.)
-- ❌ Support for non-Markdown files
+- ✅ ~~Parsing metadata from source code comments (Python docstrings, JSDoc, etc.)~~ **Implemented in v1.2**
+- ✅ ~~Support for non-Markdown files~~ **Implemented in v1.2 (Python, JavaScript, TypeScript)**
 
-**Rationale:** Markdown is sufficient for MVP; other formats add complexity without significant value initially.
+**Status:** Partially implemented. Python and JavaScript/TypeScript file scanning added in v1.2.
 
-**Future Version:** Phase 2
+**Remaining:** RST and AsciiDoc parsing (Phase 3+)
 
 ---
 
@@ -193,13 +244,13 @@ The MVP is defined as:
 ---
 
 #### 3. Code-Level Parsing
-- ❌ Parsing Python source code to extract function/class definitions
-- ❌ Auto-linking code artifacts to requirements based on docstrings
+- ✅ ~~Parsing Python source code to extract function/class definitions~~ **Implemented in v1.2**
+- ✅ ~~Auto-linking code artifacts to requirements based on docstrings~~ **Implemented in v1.2**
 - ❌ Generating code-level nodes automatically
 
-**Rationale:** Code parsing is complex and language-specific. Manual documentation of code artifacts is sufficient for MVP.
+**Status:** Partially implemented. Python and JavaScript/TypeScript scanners added in v1.2 with extensible architecture.
 
-**Future Version:** Phase 3
+**Remaining:** Auto-generation of code-level nodes (Phase 3+)
 
 ---
 
@@ -216,23 +267,19 @@ The MVP is defined as:
 ---
 
 #### 5. Watch Mode
-- ❌ Continuous file watching with automatic scanning
-- ❌ Real-time index updates
+- ✅ ~~Continuous file watching with automatic scanning~~ **Implemented in v1.2**
+- ✅ ~~Real-time index updates~~ **Implemented in v1.2**
 
-**Rationale:** Manual `scan` after changes is acceptable for MVP. Watch mode adds complexity.
-
-**Future Version:** Phase 2
+**Status:** **Fully implemented in v1.2.** The `contextgit watch` command provides file system monitoring with debouncing and graceful shutdown.
 
 ---
 
 #### 6. Git Hooks
-- ❌ Pre-commit hook to auto-scan
-- ❌ Pre-push hook to check for stale links
-- ❌ Automated hook installation
+- ✅ ~~Pre-commit hook to auto-scan~~ **Implemented in v1.2**
+- ✅ ~~Pre-push hook to check for stale links~~ **Implemented in v1.2**
+- ✅ ~~Automated hook installation~~ **Implemented in v1.2**
 
-**Rationale:** Users can manually add hooks if desired; automated hook management is not essential for MVP.
-
-**Future Version:** Phase 2 (documentation on how to set up hooks)
+**Status:** **Fully implemented in v1.2.** The `contextgit hooks install/uninstall/status` commands provide automated hook management with custom hook preservation.
 
 ---
 
@@ -273,13 +320,13 @@ The MVP is defined as:
 
 #### 10. Advanced Graph Operations
 - ❌ Shortest path queries
-- ❌ Transitive closure (full impact analysis)
-- ❌ Cycle detection and resolution suggestions
+- ✅ ~~Transitive closure (full impact analysis)~~ **Implemented in v1.2**
+- ✅ ~~Cycle detection and resolution suggestions~~ **Implemented in v1.2**
 - ❌ Graph export (DOT, GraphML, etc.)
 
-**Rationale:** Basic traceability is sufficient for MVP. Advanced graph queries are nice-to-have.
+**Status:** Partially implemented. Impact analysis (`contextgit impact`) and cycle detection (`contextgit validate --cycles`) added in v1.2.
 
-**Future Version:** Phase 3
+**Remaining:** Shortest path queries and graph export (Phase 3+)
 
 ---
 
@@ -383,16 +430,18 @@ The MVP is defined as:
   - Side panel showing node tree
   - Quick navigation to nodes
   - Inline badges for stale nodes
-- Watch mode for automatic scanning
+- ✅ ~~Watch mode for automatic scanning~~ **Implemented in v1.2**
 - Support for ReStructuredText and AsciiDoc
-- Pre-commit and pre-push hook templates (documentation)
+- ✅ ~~Pre-commit and pre-push hook templates~~ **Implemented in v1.2 (automated installation)**
 - Requirement templates and scaffolding
-- Improved error messages with suggestions
+- ✅ ~~Improved error messages with suggestions~~ **Implemented in v1.2**
 - Performance optimizations for large projects (10K+ nodes)
+
+**Status (v1.2):** Watch mode, git hooks integration, and improved error messages have been implemented. VS Code extension and additional file formats remain for future work.
 
 **Success Criteria:**
 - VS Code extension has 1,000+ installs
-- Watch mode is stable and performant
+- ✅ Watch mode is stable and performant
 - Users report improved productivity
 
 ---
@@ -404,11 +453,12 @@ The MVP is defined as:
 **Features:**
 - Advanced graph queries:
   - Shortest path between nodes
-  - Impact analysis (full transitive closure)
-  - Cycle detection and resolution
-- Code-level parsing for Python:
-  - Auto-extract functions and classes
-  - Auto-link based on docstrings
+  - ✅ ~~Impact analysis (full transitive closure)~~ **Implemented in v1.2**
+  - ✅ ~~Cycle detection and resolution~~ **Implemented in v1.2**
+- ✅ ~~Code-level parsing for Python~~ **Implemented in v1.2**:
+  - ✅ ~~Auto-extract functions and classes~~ **Implemented**
+  - ✅ ~~Auto-link based on docstrings~~ **Implemented**
+- ✅ ~~Code-level parsing for JavaScript/TypeScript~~ **Implemented in v1.2**
 - Coverage reporting:
   - % of requirements with tests
   - % of code with traceability
@@ -418,10 +468,13 @@ The MVP is defined as:
   - GitLab CI template
   - Pre-built Docker image
 - HTML report generation
+- ✅ ~~MCP Server for LLM integration~~ **Implemented in v1.2**
+
+**Status (v1.2):** Impact analysis, cycle detection, Python/JS code parsing, and MCP server have been implemented. Coverage reporting and CI/CD integration remain for future work.
 
 **Success Criteria:**
 - Users integrate contextgit into CI pipelines
-- Code-level parsing reduces manual documentation by 30%
+- ✅ Code-level parsing reduces manual documentation by 30%
 - Coverage reports help teams improve traceability
 
 ---
@@ -496,11 +549,13 @@ When evaluating whether a feature should be in the MVP, apply these criteria:
 | Feature | Decision | Rationale |
 |---------|----------|-----------|
 | `contextgit extract` | ✅ Include | Core to LLM integration; no workaround |
-| Watch mode | ❌ Exclude | Users can run `scan` manually; adds complexity |
+| Watch mode | ✅ Include (v1.2) | Users requested automation; implemented with optional dependency |
 | VS Code extension | ❌ Exclude | Nice-to-have; CLI is sufficient for MVP |
 | `contextgit confirm` | ✅ Include | Essential for staleness workflow; simple to implement |
-| Code parsing | ❌ Exclude | Complex; manual documentation works for MVP |
+| Code parsing | ✅ Include (v1.2) | High value for Python/JS projects; extensible architecture |
 | JSON output | ✅ Include | Blocking for LLM integration; simple to add |
+| MCP Server | ✅ Include (v1.2) | Native LLM integration; leverages existing handlers |
+| Git Hooks | ✅ Include (v1.2) | Automation; preserves custom hooks |
 
 ---
 
@@ -561,6 +616,21 @@ The MVP is ready for release when:
 9. ✅ Package is installable via `pip install contextgit`
 10. ✅ At least 3 external users have tested and provided feedback
 
+## Release Criteria for v1.2
+
+The v1.2 release (enhanced features) is ready when:
+
+1. ✅ All enhanced commands are implemented (validate, impact, hooks, watch, mcp-server)
+2. ✅ All functional requirements (FR-14 through FR-20) are met
+3. ✅ Multi-format file support (Python, JavaScript/TypeScript)
+4. ✅ Extensible scanner architecture
+5. ✅ Optional dependencies handled gracefully (watchdog, mcp, pydantic)
+6. ✅ MCP server integration tested with Claude Code
+7. ✅ Git hooks preserve existing custom hooks
+8. ✅ Link validation distinguishes same-file hierarchies from true self-references
+9. ✅ Unit tests cover all new functionality
+10. ✅ Documentation updated to reflect new features
+
 ---
 
 ## Post-MVP: Gathering Feedback
@@ -593,17 +663,26 @@ After MVP release, the team should:
 
 The contextgit MVP is tightly scoped to deliver maximum value with minimal complexity:
 
-**In Scope:**
+**In Scope (v1.0 MVP):**
 - Core CLI commands for initialization, scanning, querying, and traceability
 - LLM-friendly JSON output and fast context extraction
 - Git-friendly YAML storage with deterministic formatting
 - Local-first, no network dependencies
 - Comprehensive documentation
 
-**Out of Scope:**
+**Added in v1.2:**
+- Multi-format file support (Python, JavaScript/TypeScript)
+- Watch mode for automatic scanning
+- Git hooks integration (pre-commit, post-merge, pre-push)
+- Metadata validation command
+- Impact analysis command
+- MCP Server for native LLM integration
+- Enhanced link validation (same-file hierarchies vs true self-references)
+
+**Still Out of Scope:**
 - VS Code extension (Phase 2)
-- Code parsing (Phase 3)
+- ReStructuredText/AsciiDoc (Phase 3+)
 - Web dashboard (Phase 4+)
 - Enterprise features (Phase 5+)
 
-This focus ensures the MVP can be built quickly, validated with real users, and iterated based on feedback. Future phases will build on the solid foundation of the MVP to add advanced features and ecosystem integrations.
+This focus ensures the MVP can be built quickly, validated with real users, and iterated based on feedback. The v1.2 release significantly extends automation and LLM integration capabilities while maintaining the local-first, git-friendly philosophy.

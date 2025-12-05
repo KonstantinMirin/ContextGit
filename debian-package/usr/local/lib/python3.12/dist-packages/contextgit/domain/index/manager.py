@@ -1,5 +1,13 @@
 """Index management with atomic operations.
 
+contextgit:
+  id: C-116
+  type: code
+  title: "Index Manager - Atomic CRUD Operations"
+  status: active
+  upstream: [SR-012]
+  tags: [domain, index, fr-4, atomic-writes]
+
 This module implements the IndexManager class, which provides CRUD operations
 for the requirements index. It ensures atomic writes to prevent index corruption
 and maintains an in-memory cache for performance.
