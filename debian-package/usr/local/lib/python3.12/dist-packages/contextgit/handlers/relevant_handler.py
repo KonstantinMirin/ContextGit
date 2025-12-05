@@ -1,4 +1,13 @@
-"""Handler for contextgit relevant-for-file command."""
+"""Handler for contextgit relevant-for-file command.
+
+contextgit:
+  id: C-109
+  type: code
+  title: "Relevant Handler - File-Based Relevance Query"
+  status: active
+  upstream: [SR-012]
+  tags: [cli, relevance, fr-11, graph-traversal]
+"""
 
 import json
 from pathlib import Path

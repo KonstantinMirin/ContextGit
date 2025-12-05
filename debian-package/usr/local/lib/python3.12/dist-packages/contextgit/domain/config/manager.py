@@ -1,4 +1,13 @@
-"""Configuration management."""
+"""Configuration management.
+
+contextgit:
+  id: C-122
+  type: code
+  title: "Config Manager - Project Configuration"
+  status: active
+  upstream: [SR-012]
+  tags: [domain, config, fr-1]
+"""
 
 from pathlib import Path
 

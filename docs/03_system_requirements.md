@@ -316,6 +316,155 @@ downstream: []
 
 ---
 
+### FR-14: Multi-Format File Support
+
+**FR-14.1**: The system shall support scanning Python files (.py, .pyw) for contextgit metadata embedded in module docstrings.
+
+**FR-14.2**: The system shall support scanning Python files for contextgit metadata embedded in comment blocks using the format:
+```python
+# contextgit:
+#   id: C-015
+#   type: code
+#   title: "Example title"
+```
+
+**FR-14.3**: The system shall support scanning JavaScript/TypeScript files (.js, .jsx, .ts, .tsx, .mjs, .cjs) for contextgit metadata embedded in JSDoc comments using the format:
+```javascript
+/**
+ * @contextgit
+ * id: C-017
+ * type: code
+ * title: "Example title"
+ */
+```
+
+**FR-14.4**: The system shall automatically select the appropriate scanner based on file extension.
+
+**FR-14.5**: The scanner selection shall be extensible to support additional file formats in the future.
+
+---
+
+### FR-15: Metadata Validation
+
+**FR-15.1**: The system shall provide a `contextgit validate` command that checks metadata validity without modifying the index.
+
+**FR-15.2**: The validate command shall detect and report self-references (nodes referencing themselves in upstream/downstream).
+
+**FR-15.3**: The validate command shall detect and report references to non-existent nodes.
+
+**FR-15.4**: The validate command shall detect and report duplicate explicit IDs across files.
+
+**FR-15.5**: The validate command shall detect and report orphan nodes (nodes without proper upstream/downstream links).
+
+**FR-15.6**: The validate command shall detect and report circular dependencies that cross file boundaries.
+
+**FR-15.7**: The validate command shall detect and report malformed YAML/metadata (parse errors).
+
+**FR-15.8**: The validate command shall support `--format json` for machine-readable output suitable for CI integration.
+
+**FR-15.9**: The validate command shall return exit code 0 if no errors found, exit code 1 if errors found (warnings shall not affect exit code).
+
+**FR-15.10**: Each validation issue shall include: severity (error/warning/info), code, message, file, line number, and suggestion for fixing.
+
+---
+
+### FR-16: Impact Analysis
+
+**FR-16.1**: The system shall provide a `contextgit impact <ID>` command that shows downstream dependencies affected by changing a requirement.
+
+**FR-16.2**: The impact command shall accept a `--depth` option to control traversal depth (default: 2).
+
+**FR-16.3**: The impact command shall distinguish between direct downstream (depth 1) and indirect downstream (depth 2+) nodes.
+
+**FR-16.4**: The impact command shall report all affected files containing downstream nodes.
+
+**FR-16.5**: The impact command shall suggest actions for reviewing and confirming affected nodes.
+
+**FR-16.6**: The impact command shall support three output formats:
+- `tree`: ASCII tree visualization (default)
+- `json`: Machine-readable JSON output
+- `checklist`: Markdown checklist suitable for PR descriptions
+
+---
+
+### FR-17: Git Hooks Integration
+
+**FR-17.1**: The system shall provide a `contextgit hooks install` command that installs git hooks for automatic contextgit integration.
+
+**FR-17.2**: The hooks install command shall support installing the following hooks:
+- Pre-commit hook: Scans changed files before commit
+- Post-merge hook: Runs full scan after merge
+- Pre-push hook: Checks for stale links before push (optional)
+
+**FR-17.3**: The system shall provide a `contextgit hooks uninstall` command that removes contextgit git hooks.
+
+**FR-17.4**: The system shall provide a `contextgit hooks status` command that shows installed hooks status.
+
+**FR-17.5**: Hook installation shall be idempotent (can be run multiple times safely).
+
+**FR-17.6**: Hook installation shall preserve existing custom hooks (not overwrite user's hooks).
+
+**FR-17.7**: The pre-commit hook shall support an environment variable `CONTEXTGIT_FAIL_ON_STALE=1` to block commits with stale links.
+
+**FR-17.8**: The scan command shall support a `--files` option to scan only specific files (used by pre-commit hook for efficiency).
+
+---
+
+### FR-18: Watch Mode
+
+**FR-18.1**: The system shall provide a `contextgit watch` command that monitors files for changes and auto-scans.
+
+**FR-18.2**: The watch command shall support watching multiple directories simultaneously.
+
+**FR-18.3**: The watch command shall implement debouncing to group rapid file changes (configurable delay, default 500ms).
+
+**FR-18.4**: The watch command shall automatically ignore common non-source files (*.pyc, __pycache__, .git, node_modules, etc.).
+
+**FR-18.5**: The watch command shall only scan files with supported extensions (.md, .py, .js, .ts, etc.).
+
+**FR-18.6**: The watch command shall gracefully handle Ctrl+C for shutdown.
+
+**FR-18.7**: The watch command shall display real-time updates showing modified files, added/updated nodes, and stale links.
+
+**FR-18.8**: Watch mode shall require the optional `watchdog` dependency and provide a helpful error message if not installed.
+
+---
+
+### FR-19: MCP Server Integration
+
+**FR-19.1**: The system shall provide a `contextgit mcp-server` command that starts an MCP (Model Context Protocol) server for LLM integration.
+
+**FR-19.2**: The MCP server shall support stdio transport (primary) for Claude Code integration.
+
+**FR-19.3**: The MCP server shall implement the following tools:
+- `contextgit_relevant_for_file`: Get requirements relevant to a source file
+- `contextgit_extract`: Extract full context for a requirement
+- `contextgit_status`: Get project health status
+- `contextgit_impact_analysis`: Analyze impact of changing a requirement
+- `contextgit_search`: Search requirements by keyword
+
+**FR-19.4**: The MCP server shall implement the following resources:
+- `contextgit://index`: Full requirements index in JSON format
+- `contextgit://llm-instructions`: LLM instructions for contextgit usage
+
+**FR-19.5**: The MCP server shall require optional dependencies (mcp, pydantic) and provide helpful error messages if not installed.
+
+**FR-19.6**: MCP tool responses shall follow well-defined Pydantic schemas for consistent structure.
+
+---
+
+### FR-20: Link Validation Enhancements
+
+**FR-20.1**: The system shall allow same-file parent-child links (hierarchical relationships within a single document).
+
+**FR-20.2**: The system shall block true self-references (a node referencing itself in upstream/downstream).
+
+**FR-20.3**: The system shall detect and report circular dependencies that cross file boundaries.
+
+**FR-20.4**: Self-referential and circular dependency errors shall include clear error messages distinguishing between the cases.
+
+---
+
 ## Non-Functional Requirements
 
 ### NFR-1: Performance
@@ -470,23 +619,27 @@ downstream: []
 
 ---
 
-### C-4: Markdown-Only Support (MVP)
+### C-4: Supported File Formats
 
-**C-4.1**: The MVP shall only parse Markdown files (*.md, *.markdown).
+**C-4.1**: The system shall parse Markdown files (*.md, *.markdown) for contextgit metadata.
 
-**C-4.2**: The MVP shall not parse source code files (Python, JavaScript, etc.) for embedded metadata.
+**C-4.2**: The system shall parse Python files (*.py, *.pyw) for contextgit metadata in docstrings and comment blocks.
 
-**C-4.3**: Support for additional file formats is explicitly deferred to future versions.
+**C-4.3**: The system shall parse JavaScript/TypeScript files (*.js, *.jsx, *.ts, *.tsx, *.mjs, *.cjs) for contextgit metadata in JSDoc comments.
+
+**C-4.4**: ReStructuredText (RST) and AsciiDoc support are deferred to future versions.
 
 ---
 
 ## Acceptance Criteria
 
-The MVP shall be considered complete when:
+The system shall be considered complete when:
 
-1. All functional requirements (FR-1 through FR-13) are implemented and tested.
+1. All functional requirements (FR-1 through FR-20) are implemented and tested.
 2. All non-functional requirements (NFR-1 through NFR-8) are met.
 3. All constraints (C-1 through C-4) are satisfied.
 4. The system passes end-to-end testing with the user stories in `02_user_stories.md`.
 5. Documentation is complete and reviewed.
 6. An example project demonstrating the workflow is available.
+7. All new commands (validate, impact, hooks, watch, mcp-server) have comprehensive test coverage.
+8. Optional dependencies (watchdog, mcp, pydantic) are properly documented with installation instructions.

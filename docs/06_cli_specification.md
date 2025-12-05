@@ -1090,6 +1090,444 @@ $ git commit -m "Update requirements"
 
 ---
 
+## Command: `contextgit validate`
+
+### Synopsis
+
+```bash
+contextgit validate [PATH] [OPTIONS]
+```
+
+### Description
+
+Validate contextgit metadata without modifying the index. Checks for errors like self-references, missing targets, duplicate IDs, orphan nodes, and circular dependencies.
+
+### Arguments
+
+| Argument | Required | Description |
+|----------|----------|-------------|
+| `PATH` | No | Path to validate (default: current directory) |
+
+### Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `--recursive` / `-r` | flag | true | Recursively scan subdirectories |
+| `--fix` | flag | false | Auto-fix fixable issues (not yet implemented) |
+| `--format` / `-f` | string | text | Output format: `text` or `json` |
+
+### Validation Checks
+
+| Code | Severity | Description |
+|------|----------|-------------|
+| `SELF_REFERENCE` | error | Node references itself in upstream/downstream |
+| `MISSING_TARGET` | error | Reference to non-existent node |
+| `DUPLICATE_ID` | error | Same explicit ID used multiple times |
+| `CIRCULAR_DEPENDENCY` | error | Cross-file circular dependency detected |
+| `ORPHAN_NODE` | warning | Node without proper upstream/downstream |
+| `PARSE_ERROR` | error | Malformed YAML/metadata |
+
+### Output (Text Format)
+
+```
+Validation Results
+══════════════════
+Files scanned: 15
+Blocks found: 23
+
+ERRORS (2):
+  ✗ [SELF_REFERENCE] docs/req.md:15 - Node SR-001 references itself
+    Suggestion: Remove SR-001 from upstream list
+
+  ✗ [MISSING_TARGET] docs/arch.md:30 - Reference to unknown node: SR-999
+    Suggestion: Create node SR-999 or fix the reference
+
+WARNINGS (1):
+  ⚠ [ORPHAN_NODE] src/code.py:1 - C-015 has no upstream
+    Suggestion: Add upstream reference to link requirements
+```
+
+### Output (JSON Format)
+
+```json
+{
+  "files_scanned": 15,
+  "blocks_found": 23,
+  "issues": [
+    {
+      "severity": "error",
+      "code": "SELF_REFERENCE",
+      "message": "Node SR-001 references itself",
+      "file": "docs/req.md",
+      "line": 15,
+      "suggestion": "Remove SR-001 from upstream list"
+    }
+  ],
+  "summary": {
+    "errors": 2,
+    "warnings": 1,
+    "info": 0
+  }
+}
+```
+
+### Exit Codes
+
+- 0: No errors found (warnings may exist)
+- 1: One or more errors found
+
+### Examples
+
+**Validate current directory:**
+```bash
+$ contextgit validate
+```
+
+**JSON output for CI:**
+```bash
+$ contextgit validate --format json
+```
+
+---
+
+## Command: `contextgit impact`
+
+### Synopsis
+
+```bash
+contextgit impact <REQUIREMENT_ID> [OPTIONS]
+```
+
+### Description
+
+Analyze the downstream impact of changing a requirement. Shows all nodes that would be affected if the specified requirement changes.
+
+### Arguments
+
+| Argument | Required | Description |
+|----------|----------|-------------|
+| `REQUIREMENT_ID` | Yes | Node ID to analyze (e.g., "SR-006") |
+
+### Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `--depth` / `-d` | integer | 2 | How many levels of dependencies to traverse |
+| `--format` / `-f` | string | tree | Output format: `tree`, `json`, or `checklist` |
+
+### Output (Tree Format)
+
+```
+Impact Analysis: SR-006 (AI Orchestration Pipeline)
+════════════════════════════════════════════════════════════════
+DIRECT DOWNSTREAM (depth 1):
+├── AR-010: Architecture Design
+│   └── Type: architecture, File: docs/architecture.md
+├── C-016: Validation Stage
+│   └── Type: code, File: src/validation.py
+
+INDIRECT (depth 2+): 3 nodes
+└── T-001: Test for validation
+    ... and 2 more
+
+AFFECTED FILES:
+  • docs/architecture.md
+  • src/validation.py
+  • tests/test_validation.py
+
+SUGGESTED ACTIONS:
+  1. Review 2 direct downstream node(s) for consistency
+  2. Run contextgit confirm AR-010 after review
+  3. Run contextgit confirm C-016 after review
+```
+
+### Output (JSON Format)
+
+```json
+{
+  "requirement_id": "SR-006",
+  "title": "AI Orchestration Pipeline",
+  "type": "system",
+  "direct_downstream": [
+    {"id": "AR-010", "title": "Architecture Design", "type": "architecture"}
+  ],
+  "indirect_downstream": [
+    {"id": "T-001", "title": "Test for validation", "type": "test"}
+  ],
+  "affected_files": ["docs/architecture.md", "src/validation.py"],
+  "suggested_actions": ["Review AR-010 for consistency", "Run contextgit confirm AR-010"]
+}
+```
+
+### Output (Checklist Format)
+
+```markdown
+## Impact of changes to SR-006
+
+### Review checklist
+- [ ] AR-010: Architecture Design
+- [ ] C-016: Validation Stage
+
+### After review
+- [ ] `contextgit confirm AR-010`
+- [ ] `contextgit confirm C-016`
+```
+
+### Examples
+
+**Analyze impact:**
+```bash
+$ contextgit impact SR-006
+```
+
+**Generate PR checklist:**
+```bash
+$ contextgit impact SR-006 --format checklist >> pr_description.md
+```
+
+---
+
+## Command: `contextgit hooks`
+
+### Synopsis
+
+```bash
+contextgit hooks <SUBCOMMAND> [OPTIONS]
+```
+
+### Description
+
+Manage git hooks for automatic contextgit integration.
+
+### Subcommands
+
+#### `contextgit hooks install`
+
+Install git hooks for automatic scanning.
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `--pre-commit` | flag | true | Install pre-commit hook |
+| `--post-merge` | flag | true | Install post-merge hook |
+| `--pre-push` | flag | false | Install pre-push hook |
+| `--fail-on-stale` | flag | false | Show hint about CONTEXTGIT_FAIL_ON_STALE |
+
+**Output:**
+```
+Installing git hooks...
+  ✅ pre-commit hook installed
+  ✅ post-merge hook installed
+  ⏭️  pre-push hook skipped (use --pre-push to install)
+
+Tip: Set CONTEXTGIT_FAIL_ON_STALE=1 to block commits/pushes with stale links
+```
+
+#### `contextgit hooks uninstall`
+
+Remove contextgit git hooks.
+
+**Output:**
+```
+Uninstalling contextgit git hooks...
+  ✅ pre-commit hook removed
+  ✅ post-merge hook removed
+  ⏭️  pre-push hook was not installed
+```
+
+#### `contextgit hooks status`
+
+Show installed hooks status.
+
+**Output:**
+```
+Git hooks status:
+  pre-commit:  ✅ installed (contextgit)
+  post-merge:  ✅ installed (contextgit)
+  pre-push:    ⚪ not installed
+```
+
+### Hook Behavior
+
+**Pre-commit hook:**
+1. Gets list of changed .md, .py, .ts, .js files
+2. Scans only changed files
+3. Reports stale link count
+4. Blocks commit if `CONTEXTGIT_FAIL_ON_STALE=1`
+
+**Post-merge hook:**
+1. Runs `contextgit scan --recursive`
+2. Shows stale links summary
+
+**Pre-push hook:**
+1. Checks for stale links
+2. Blocks push if `CONTEXTGIT_FAIL_ON_STALE=1`
+
+### Examples
+
+**Install default hooks:**
+```bash
+$ contextgit hooks install
+```
+
+**Install all hooks:**
+```bash
+$ contextgit hooks install --pre-push
+```
+
+**Check status:**
+```bash
+$ contextgit hooks status
+```
+
+---
+
+## Command: `contextgit watch`
+
+### Synopsis
+
+```bash
+contextgit watch [PATHS]... [OPTIONS]
+```
+
+### Description
+
+Watch for file changes and auto-scan. Requires the optional `watchdog` dependency.
+
+### Arguments
+
+| Argument | Required | Description |
+|----------|----------|-------------|
+| `PATHS` | No | Directories to watch (default: repository root) |
+
+### Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `--notify` | flag | false | Desktop notifications (placeholder) |
+| `--debounce` | integer | 500 | Debounce delay in milliseconds |
+| `--format` / `-f` | string | text | Output format: `text` or `json` |
+
+### Output
+
+```
+🔍 Watching: docs/, src/
+Press Ctrl+C to stop
+
+[14:23:45] Modified: docs/requirements.md
+           Scanned 1 files
+           Added: 0 nodes
+           Updated: 1 nodes
+
+[14:24:01] Modified: src/validator.py
+           Scanned 1 files
+           Added: 1 nodes (C-020)
+           ✅ Links synchronized
+```
+
+### Requirements
+
+Requires the `watchdog` package. Install with:
+```bash
+pip install contextgit[watch]
+# or
+pip install watchdog
+```
+
+### Examples
+
+**Watch repository root:**
+```bash
+$ contextgit watch
+```
+
+**Watch specific directories:**
+```bash
+$ contextgit watch docs/ src/
+```
+
+**Custom debounce delay:**
+```bash
+$ contextgit watch --debounce 1000
+```
+
+---
+
+## Command: `contextgit mcp-server`
+
+### Synopsis
+
+```bash
+contextgit mcp-server [OPTIONS]
+```
+
+### Description
+
+Start an MCP (Model Context Protocol) server for LLM integration. Allows LLMs like Claude Code to query requirements in real-time.
+
+### Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `--transport` / `-t` | string | stdio | Transport: `stdio` or `http` |
+| `--port` / `-p` | integer | 8080 | Port for HTTP transport |
+| `--host` | string | localhost | Host for HTTP transport |
+| `--repo-root` / `-r` | string | - | Repository root path |
+
+### MCP Tools
+
+| Tool | Description |
+|------|-------------|
+| `contextgit_relevant_for_file` | Get requirements relevant to a source file |
+| `contextgit_extract` | Extract full context for a requirement |
+| `contextgit_status` | Get project health status |
+| `contextgit_impact_analysis` | Analyze impact of changing a requirement |
+| `contextgit_search` | Search requirements by keyword |
+
+### MCP Resources
+
+| Resource | Description |
+|----------|-------------|
+| `contextgit://index` | Full requirements index in JSON format |
+| `contextgit://llm-instructions` | LLM instructions for contextgit usage |
+
+### Requirements
+
+Requires the `mcp` and `pydantic` packages. Install with:
+```bash
+pip install contextgit[mcp]
+# or
+pip install mcp pydantic
+```
+
+### Claude Code Integration
+
+Add to your MCP configuration:
+```json
+{
+  "mcpServers": {
+    "contextgit": {
+      "command": "contextgit-mcp",
+      "args": [],
+      "cwd": "/path/to/project"
+    }
+  }
+}
+```
+
+### Examples
+
+**Start MCP server (stdio):**
+```bash
+$ contextgit mcp-server
+```
+
+**Specify repository root:**
+```bash
+$ contextgit mcp-server --repo-root /path/to/project
+```
+
+---
+
 ## Exit Code Summary
 
 | Code | Meaning |

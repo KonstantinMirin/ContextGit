@@ -78,6 +78,11 @@ Both humans and LLM CLIs invoke `contextgit` commands. The tool reads and writes
 │  │   - NextIdHandler                                       │   │
 │  │   - RelevanceHandler                                    │   │
 │  │   - FormatHandler                                       │   │
+│  │   - ValidateHandler (v1.2+)                             │   │
+│  │   - ImpactHandler (v1.2+)                               │   │
+│  │   - HooksHandler (v1.2+)                                │   │
+│  │   - WatchHandler (v1.2+)                                │   │
+│  │   - MCPServerHandler (v1.2+)                            │   │
 │  └────────────────────┬────────────────────────────────────┘   │
 └─────────────────────────┼──────────────────────────────────────┘
                           │
@@ -111,12 +116,23 @@ Both humans and LLM CLIs invoke `contextgit` commands. The tool reads and writes
 │  └─────────────────────────────────────────────────────────┘   │
 │                                                                 │
 │  ┌─────────────────────────────────────────────────────────┐   │
+│  │  File Scanner (v1.2+)                                  │   │
+│  │    - Abstract base scanner interface                   │   │
+│  │    - MarkdownScanner (.md)                             │   │
+│  │    - PythonScanner (.py, .pyw)                         │   │
+│  │    - JavaScriptScanner (.js, .jsx, .ts, .tsx, .mjs)    │   │
+│  │    - Extensible for new file formats                   │   │
+│  │    - Scanner registry for extension mapping            │   │
+│  └─────────────────────────────────────────────────────────┘   │
+│                                                                 │
+│  ┌─────────────────────────────────────────────────────────┐   │
 │  │  Linking Engine                                         │   │
 │  │    - Build link graph from upstream/downstream         │   │
 │  │    - Detect checksum changes                           │   │
 │  │    - Update sync status                                │   │
 │  │    - Traverse graph (upstream/downstream queries)      │   │
-│  │    - Detect circular dependencies                      │   │
+│  │    - Detect circular dependencies (v1.2+)              │   │
+│  │    - Validate links with file context (v1.2+)          │   │
 │  │    - Identify orphans                                  │   │
 │  └─────────────────────────────────────────────────────────┘   │
 │                                                                 │
@@ -166,6 +182,33 @@ Both humans and LLM CLIs invoke `contextgit` commands. The tool reads and writes
 │  │    - Format output as JSON                             │   │
 │  │    - Handle --format flag                              │   │
 │  └─────────────────────────────────────────────────────────┘   │
+│                                                                 │
+│  ┌─────────────────────────────────────────────────────────┐   │
+│  │  MCP Server (v1.2+)                                     │   │
+│  │    - Model Context Protocol implementation             │   │
+│  │    - 5 Tools: relevant_for_file, extract, status,      │   │
+│  │               impact_analysis, search                  │   │
+│  │    - 2 Resources: index, llm-instructions              │   │
+│  │    - stdio transport for Claude Code                   │   │
+│  │    - Pydantic response schemas                         │   │
+│  └─────────────────────────────────────────────────────────┘   │
+│                                                                 │
+│  ┌─────────────────────────────────────────────────────────┐   │
+│  │  File System Watcher (v1.2+)                            │   │
+│  │    - Watch directories for changes (watchdog)          │   │
+│  │    - Debounce rapid file changes                       │   │
+│  │    - Trigger scan on file modifications                │   │
+│  │    - Graceful shutdown handling                        │   │
+│  └─────────────────────────────────────────────────────────┘   │
+│                                                                 │
+│  ┌─────────────────────────────────────────────────────────┐   │
+│  │  Git Hooks Manager (v1.2+)                              │   │
+│  │    - Install/uninstall git hooks                       │   │
+│  │    - Pre-commit: scan changed files                    │   │
+│  │    - Post-merge: full project scan                     │   │
+│  │    - Pre-push: staleness check (optional)              │   │
+│  │    - Preserve existing custom hooks                    │   │
+│  └─────────────────────────────────────────────────────────┘   │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
@@ -186,7 +229,7 @@ Both humans and LLM CLIs invoke `contextgit` commands. The tool reads and writes
 
 **Key Commands**:
 - `contextgit init`
-- `contextgit scan [PATH] [--recursive] [--dry-run] [--format json]`
+- `contextgit scan [PATH] [--recursive] [--dry-run] [--format json] [--files]`
 - `contextgit status [--orphans] [--stale] [--file PATH] [--type TYPE] [--format json]`
 - `contextgit show <ID> [--format json] [--graph]`
 - `contextgit extract <ID> [--format json]`
@@ -195,6 +238,11 @@ Both humans and LLM CLIs invoke `contextgit` commands. The tool reads and writes
 - `contextgit next-id <TYPE> [--format json]`
 - `contextgit relevant-for-file <PATH> [--depth N] [--format json]`
 - `contextgit fmt`
+- `contextgit validate [PATH] [--strict] [--format json]` (v1.2+)
+- `contextgit impact <ID> [--format tree|json|checklist]` (v1.2+)
+- `contextgit hooks install|uninstall|status` (v1.2+)
+- `contextgit watch [PATH] [--debounce MS]` (v1.2+)
+- `contextgit mcp-server` (v1.2+)
 
 ---
 
@@ -483,6 +531,59 @@ directories:
 
 ---
 
+#### File Scanner (v1.2+)
+
+**Purpose**: Provide extensible file scanning with format-specific metadata extraction.
+
+**Responsibilities**:
+- Define abstract scanner interface
+- Provide concrete scanners for each file format
+- Registry-based scanner selection by file extension
+- Extract metadata blocks from various formats
+
+**Key Operations**:
+- `get_scanner_for_file(file_path: str) -> FileScanner | None`
+- `scan_file(file_path: str) -> list[RawMetadata]`
+- `get_supported_extensions() -> set[str]`
+
+**Scanner Types**:
+```python
+class FileScanner(ABC):
+    """Abstract base for file scanners."""
+    @abstractmethod
+    def supported_extensions(self) -> set[str]: ...
+
+    @abstractmethod
+    def scan(self, file_path: Path) -> list[RawMetadata]: ...
+
+class MarkdownScanner(FileScanner):
+    """Scans .md files for YAML frontmatter and inline comments."""
+    def supported_extensions(self) -> set[str]:
+        return {".md", ".markdown"}
+
+class PythonScanner(FileScanner):
+    """Scans Python files for docstring and comment metadata."""
+    def supported_extensions(self) -> set[str]:
+        return {".py", ".pyw"}
+
+class JavaScriptScanner(FileScanner):
+    """Scans JS/TS files for JSDoc-style metadata."""
+    def supported_extensions(self) -> set[str]:
+        return {".js", ".jsx", ".ts", ".tsx", ".mjs", ".cjs"}
+```
+
+**Metadata Formats by File Type**:
+
+| File Type | Format | Example |
+|-----------|--------|---------|
+| Markdown | YAML frontmatter | `---\ncontextgit:\n  id: SR-001\n---` |
+| Markdown | Inline HTML comment | `<!-- contextgit\nid: SR-001\n-->` |
+| Python | Docstring YAML | `"""contextgit:\n  id: C-001\n"""` |
+| Python | Comment block | `# contextgit:\n#   id: C-001` |
+| JavaScript | JSDoc block | `/** @contextgit\n * id: C-001\n */` |
+
+---
+
 ### Infrastructure Layer
 
 #### File System Access
@@ -540,6 +641,96 @@ yaml.width = 120
 - `format_status(index: Index, format: str) -> str`
 - `format_node(node: Node, format: str) -> str`
 - `format_links(links: list[Link], format: str) -> str`
+
+---
+
+#### MCP Server (v1.2+)
+
+**Purpose**: Provide native LLM integration via the Model Context Protocol.
+
+**Responsibilities**:
+- Implement MCP server with stdio transport
+- Expose contextgit operations as MCP tools
+- Provide index and instructions as MCP resources
+- Use Pydantic schemas for response validation
+
+**Key Operations**:
+- `start_server() -> None` (runs stdio event loop)
+- `register_tools() -> None`
+- `register_resources() -> None`
+
+**MCP Tools**:
+| Tool | Description |
+|------|-------------|
+| `relevant_for_file` | Find requirements related to a source file |
+| `extract` | Extract requirement snippet by ID |
+| `status` | Get project health summary |
+| `impact_analysis` | Analyze downstream impact of a node |
+| `search` | Search nodes by query string |
+
+**MCP Resources**:
+| Resource | URI | Description |
+|----------|-----|-------------|
+| Index | `contextgit://index` | Full requirements index |
+| Instructions | `contextgit://llm-instructions` | Usage guidelines for LLMs |
+
+**Technology**: Requires `mcp` and `pydantic` packages (optional dependencies).
+
+---
+
+#### File System Watcher (v1.2+)
+
+**Purpose**: Monitor file system for changes and trigger automatic scanning.
+
+**Responsibilities**:
+- Watch directories for file modifications
+- Debounce rapid changes (default: 500ms)
+- Trigger scan on relevant file changes
+- Handle graceful shutdown (SIGINT, SIGTERM)
+
+**Key Operations**:
+- `start_watch(paths: list[str], debounce_ms: int) -> None`
+- `stop_watch() -> None`
+- `on_file_changed(event: FileSystemEvent) -> None`
+
+**Algorithm**:
+1. Initialize watchdog observer for specified paths
+2. Filter events to supported file extensions
+3. Accumulate changes in debounce window
+4. After debounce period expires, trigger scan with `--files` option
+5. Report results to console
+6. On SIGINT/SIGTERM, stop observer and exit cleanly
+
+**Technology**: Requires `watchdog` package (optional dependency).
+
+---
+
+#### Git Hooks Manager (v1.2+)
+
+**Purpose**: Automate contextgit operations via git hooks.
+
+**Responsibilities**:
+- Install git hooks while preserving existing hooks
+- Provide pre-commit, post-merge, and pre-push hooks
+- Generate hook scripts that run contextgit commands
+- Support idempotent installation/uninstallation
+
+**Key Operations**:
+- `install_hooks(hooks: list[str]) -> None`
+- `uninstall_hooks(hooks: list[str]) -> None`
+- `get_hooks_status() -> dict[str, HookStatus]`
+
+**Hook Types**:
+| Hook | Trigger | Action |
+|------|---------|--------|
+| pre-commit | Before commit | Scan changed files, block if stale |
+| post-merge | After merge/pull | Full scan of project |
+| pre-push | Before push | Optional staleness check |
+
+**Hook Preservation**:
+- Existing hooks are backed up to `<hook>.backup`
+- Installed hooks include markers: `# contextgit-hook-start` / `# contextgit-hook-end`
+- Uninstall removes only contextgit portions, restores original if present
 
 ---
 
@@ -676,6 +867,21 @@ LLM tools (Claude Code) detect contextgit-enabled projects by checking for `.con
 - **ruff**: Fast linter and formatter (replaces flake8, black, isort)
 - Alternative: black + flake8 + isort
 
+### Optional Dependencies (v1.2+)
+
+These packages are optional and enable specific features:
+
+| Package | Feature | Install Command |
+|---------|---------|-----------------|
+| **watchdog** | Watch mode (`contextgit watch`) | `pip install contextgit[watch]` |
+| **mcp** | MCP server (`contextgit mcp-server`) | `pip install contextgit[mcp]` |
+| **pydantic** | MCP response schemas | `pip install contextgit[mcp]` |
+
+Install all optional dependencies:
+```bash
+pip install contextgit[all]
+```
+
 ---
 
 ## Error Handling Strategy
@@ -701,6 +907,11 @@ LLM tools (Claude Code) detect contextgit-enabled projects by checking for `.con
 - 3: File not found
 - 4: Invalid metadata
 - 5: Index corrupted
+- 6: Stale links exist (v1.2+)
+- 7: Validation errors (v1.2+)
+- 8: Self-referential error (v1.2+)
+- 9: Circular dependency error (v1.2+)
+- 10: Missing dependency (v1.2+)
 
 ---
 
@@ -743,28 +954,45 @@ LLM tools (Claude Code) detect contextgit-enabled projects by checking for `.con
 
 ---
 
-## Extensibility (Future)
+## Extensibility
 
-While the MVP focuses on Markdown files and YAML storage, the architecture is designed to be extensible:
+The architecture is designed to be extensible. Here's what's been implemented and what remains:
 
-### Additional File Formats
-- Add parsers for ReStructuredText, AsciiDoc
-- Add parsers for source code comments (Python docstrings, JSDoc)
+### File Format Support
+
+| Format | Status | Version |
+|--------|--------|---------|
+| Markdown (.md) | ✅ Implemented | v1.0 |
+| Python (.py) | ✅ Implemented | v1.2 |
+| JavaScript/TypeScript | ✅ Implemented | v1.2 |
+| ReStructuredText | ⏳ Planned | Phase 3+ |
+| AsciiDoc | ⏳ Planned | Phase 3+ |
+
+**Adding New Formats**: Create a new scanner class extending `FileScanner` and register it with the scanner registry.
 
 ### Advanced Linking
-- Support weighted links (importance, confidence)
-- Support link attributes (date range, conditional)
+- ⏳ Support weighted links (importance, confidence)
+- ⏳ Support link attributes (date range, conditional)
 
 ### Graph Algorithms
-- Shortest path between requirements
-- Impact analysis (transitive closure of changes)
-- Coverage analysis (requirements without tests)
+
+| Algorithm | Status | Version |
+|-----------|--------|---------|
+| Impact analysis | ✅ Implemented | v1.2 |
+| Circular dependency detection | ✅ Implemented | v1.2 |
+| Shortest path | ⏳ Planned | Phase 3+ |
+| Coverage analysis | ⏳ Planned | Phase 3+ |
 
 ### Integration Points
-- Git hooks for automatic scanning
-- CI/CD plugins
-- VS Code extension (already planned)
-- GitHub Action for PR checks
+
+| Integration | Status | Version |
+|-------------|--------|---------|
+| Git hooks | ✅ Implemented | v1.2 |
+| MCP Server | ✅ Implemented | v1.2 |
+| Watch mode | ✅ Implemented | v1.2 |
+| VS Code extension | ⏳ Planned | Phase 2 |
+| GitHub Action | ⏳ Planned | Phase 3+ |
+| CI/CD plugins | ⏳ Planned | Phase 3+ |
 
 ---
 
@@ -774,7 +1002,8 @@ The architecture of `contextgit` is layered, modular, and designed for:
 - **Simplicity**: Text-based storage, no database
 - **Speed**: Most operations under 500ms
 - **Reliability**: Atomic writes, clear error handling
-- **LLM-friendliness**: JSON output, precise context extraction
-- **Git-friendliness**: Deterministic output, clean diffs
+- **LLM-friendliness**: JSON output, precise context extraction, MCP server
+- **Git-friendliness**: Deterministic output, clean diffs, git hooks integration
+- **Extensibility**: Pluggable scanner architecture for new file formats
 
-This design supports the MVP requirements while providing a foundation for future enhancements.
+This design supports the MVP requirements while providing a foundation for future enhancements. The v1.2 release significantly expands capabilities with multi-format scanning, automation (watch mode, git hooks), and native LLM integration via MCP.

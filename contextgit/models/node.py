@@ -1,5 +1,13 @@
 """Node model for contextgit.
 
+contextgit:
+  id: C-124
+  type: code
+  title: "Node Model - Requirement Entity Definition"
+  status: active
+  upstream: [SR-012]
+  tags: [models, dataclass, fr-4]
+
 This module defines the Node class, representing a requirement or context item.
 Nodes are the primary entities tracked in the contextgit system, containing
 metadata about requirements, architecture decisions, code, tests, etc.

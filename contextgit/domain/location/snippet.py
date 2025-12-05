@@ -1,5 +1,13 @@
 """Snippet extraction from files.
 
+contextgit:
+  id: C-120
+  type: code
+  title: "Snippet Extractor - Context Extraction"
+  status: active
+  upstream: [SR-012]
+  tags: [domain, extraction, fr-7, performance]
+
 This module provides functionality to extract text snippets from files based on
 location specifications (heading paths or line ranges).
 """

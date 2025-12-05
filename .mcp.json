@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "contextgit": {
+      "type": "stdio",
+      "command": "contextgit",
+      "args": [
+        "mcp-server"
+      ],
+      "env": {}
+    }
+  }
+}

@@ -1,4 +1,13 @@
-"""Handler for contextgit fmt command."""
+"""Handler for contextgit fmt command.
+
+contextgit:
+  id: C-111
+  type: code
+  title: "Fmt Handler - Index File Formatting"
+  status: active
+  upstream: [SR-012]
+  tags: [cli, formatting, fr-12, git-friendly]
+"""
 
 import json
 from contextgit.handlers.base import BaseHandler

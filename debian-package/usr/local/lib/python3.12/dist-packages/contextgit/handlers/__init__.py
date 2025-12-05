@@ -8,6 +8,9 @@ from contextgit.handlers.scan_handler import ScanHandler, scan_command
 from contextgit.handlers.status_handler import StatusHandler, status_command
 from contextgit.handlers.confirm_handler import ConfirmHandler
 from contextgit.handlers.link_handler import LinkHandler, link_command
+from contextgit.handlers.impact_handler import ImpactHandler, impact_command
+from contextgit.handlers.hooks_handler import HooksHandler
+from contextgit.handlers.watch_handler import WatchHandler
 
 __all__ = [
     'BaseHandler',
@@ -18,4 +21,7 @@ __all__ = [
     'StatusHandler', 'status_command',
     'ConfirmHandler',
     'LinkHandler', 'link_command',
+    'ImpactHandler', 'impact_command',
+    'HooksHandler',
+    'WatchHandler',
 ]

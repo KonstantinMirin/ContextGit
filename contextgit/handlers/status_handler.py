@@ -1,4 +1,13 @@
-"""Handler for contextgit status command."""
+"""Handler for contextgit status command.
+
+contextgit:
+  id: C-104
+  type: code
+  title: "Status Handler - Project Health Reporting"
+  status: active
+  upstream: [SR-012]
+  tags: [cli, status, fr-5, health-check]
+"""
 
 import json
 from pathlib import Path

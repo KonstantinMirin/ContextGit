@@ -1,4 +1,13 @@
-"""Handler for contextgit show command."""
+"""Handler for contextgit show command.
+
+contextgit:
+  id: C-110
+  type: code
+  title: "Show Handler - Node Details Display"
+  status: active
+  upstream: [SR-012]
+  tags: [cli, show, fr-6, node-info]
+"""
 
 import json
 from pathlib import Path

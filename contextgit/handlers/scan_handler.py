@@ -1,5 +1,13 @@
 """Handler for contextgit scan command.
 
+contextgit:
+  id: C-101
+  type: code
+  title: "Scan Handler - File Scanning and Index Update Implementation"
+  status: active
+  upstream: [SR-012]
+  tags: [cli, scanning, fr-3, metadata-parsing]
+
 This module implements the ScanHandler, which is the most complex command handler.
 It discovers metadata in Markdown files, creates/updates nodes, builds links, and
 updates sync status.
@@ -40,7 +48,7 @@ from contextgit.infra.yaml_io import YAMLSerializer
 from contextgit.infra.output import OutputFormatter
 from contextgit.domain.index.manager import IndexManager
 from contextgit.domain.config.manager import ConfigManager
-from contextgit.domain.metadata.parser import MetadataParser
+from contextgit.domain.metadata.parser import MetadataParser, RawMetadata
 from contextgit.domain.location.resolver import LocationResolver
 from contextgit.domain.location.snippet import SnippetExtractor
 from contextgit.domain.checksum.calculator import ChecksumCalculator
@@ -49,26 +57,33 @@ from contextgit.domain.id_gen.generator import IDGenerator
 from contextgit.models.node import Node
 from contextgit.models.enums import NodeType, NodeStatus
 from contextgit.exceptions import InvalidMetadataError
+from contextgit.scanners import get_scanner, get_supported_extensions
 
 
 class ScanHandler(BaseHandler):
     """Handler for contextgit scan command.
 
-    The scan command discovers metadata blocks in Markdown files and updates
+    The scan command discovers metadata blocks in multiple file formats and updates
     the index accordingly. It performs the following operations:
-    1. Scans specified files/directories for Markdown files
-    2. Parses metadata blocks (frontmatter and inline HTML comments)
+    1. Scans specified files/directories for supported files (Markdown, Python, JS/TS)
+    2. Parses metadata blocks using format-specific scanners
     3. Creates or updates nodes in the index
     4. Generates IDs for nodes marked with 'id: auto'
     5. Extracts content snippets and calculates checksums
     6. Builds traceability links from upstream/downstream fields
     7. Updates sync status for changed nodes
+
+    Supported formats:
+    - Markdown (.md, .markdown): YAML frontmatter and HTML comments
+    - Python (.py, .pyw): Module docstrings and comment blocks
+    - JavaScript/TypeScript (.js, .jsx, .ts, .tsx, .mjs, .cjs): JSDoc blocks
     """
 
     def handle(
         self,
         path: str | None = None,
         recursive: bool = False,
+        files: list[str] | None = None,
         dry_run: bool = False,
         format: str = "text"
     ) -> str:
@@ -78,6 +93,7 @@ class ScanHandler(BaseHandler):
         Args:
             path: Path to scan (default: current directory)
             recursive: Scan recursively through subdirectories
+            files: List of specific files to scan (overrides path/recursive)
             dry_run: Don't save changes to index
             format: Output format (text or json)
 
@@ -98,23 +114,40 @@ class ScanHandler(BaseHandler):
         index_mgr = IndexManager(self.fs, self.yaml, repo_root)
         index = index_mgr.load_index()
 
-        # Determine scan path (default to repo root)
-        if path:
-            scan_path = Path(path).resolve()
-            # Validate that path is within repo
-            try:
-                scan_path.relative_to(repo_root)
-            except ValueError:
-                # Path is outside repo, scan it anyway but warn
-                pass
-        else:
-            scan_path = Path(repo_root)
+        # Determine which files to scan
+        files_to_scan = []
 
-        # Find all Markdown files
-        files = list(self.fs.walk_files(str(scan_path), "*.md", recursive))
+        if files:
+            # Scan specific files provided as argument
+            for file_path in files:
+                file_path_obj = Path(file_path)
+                if file_path_obj.is_absolute():
+                    files_to_scan.append(str(file_path_obj))
+                else:
+                    # Convert relative path to absolute
+                    abs_path = (Path(repo_root) / file_path).resolve()
+                    files_to_scan.append(str(abs_path))
+        else:
+            # Determine scan path (default to repo root)
+            if path:
+                scan_path = Path(path).resolve()
+                # Validate that path is within repo
+                try:
+                    scan_path.relative_to(repo_root)
+                except ValueError:
+                    # Path is outside repo, scan it anyway but warn
+                    pass
+            else:
+                scan_path = Path(repo_root)
+
+            # Find all supported files (markdown, python, javascript/typescript)
+            supported_extensions = get_supported_extensions()
+            for ext in supported_extensions:
+                # Convert extension to glob pattern (e.g., '.py' -> '*.py')
+                pattern = f"*{ext}"
+                files_to_scan.extend(list(self.fs.walk_files(str(scan_path), pattern, recursive)))
 
         # Initialize domain components
-        metadata_parser = MetadataParser(self.fs)
         location_resolver = LocationResolver(self.fs)
         snippet_extractor = SnippetExtractor(self.fs)
         checksum_calc = ChecksumCalculator()
@@ -129,7 +162,7 @@ class ScanHandler(BaseHandler):
         errors = []
 
         # Process each file
-        for file_path in files:
+        for file_path in files_to_scan:
             # Calculate relative path from repo root
             try:
                 rel_path = str(Path(file_path).relative_to(repo_root))
@@ -137,8 +170,14 @@ class ScanHandler(BaseHandler):
                 # File is outside repo, use absolute path
                 rel_path = str(file_path)
 
+            # Get appropriate scanner for file type
+            scanner = get_scanner(Path(file_path))
+            if not scanner:
+                # Skip files with unsupported extensions
+                continue
+
             try:
-                metadata_blocks = metadata_parser.parse_file(file_path)
+                extracted_blocks = scanner.extract_metadata(Path(file_path))
             except InvalidMetadataError as e:
                 errors.append(f"{rel_path}: {e}")
                 continue
@@ -146,8 +185,20 @@ class ScanHandler(BaseHandler):
                 errors.append(f"{rel_path}: Unexpected error - {e}")
                 continue
 
-            # Process each metadata block in the file
-            for metadata in metadata_blocks:
+            # Convert ExtractedMetadata to RawMetadata and process
+            for extracted in extracted_blocks:
+                # Convert to RawMetadata format
+                metadata = RawMetadata(
+                    id=extracted.id,
+                    type=extracted.type,
+                    title=extracted.title,
+                    upstream=extracted.upstream,
+                    downstream=extracted.downstream,
+                    status=extracted.status,
+                    tags=extracted.tags,
+                    llm_generated=extracted.llm_generated,
+                    line_number=extracted.line_number,
+                )
                 try:
                     # Resolve location first (needed for finding existing nodes)
                     location = location_resolver.resolve_location(
@@ -253,7 +304,7 @@ class ScanHandler(BaseHandler):
 
         # Format output
         summary = {
-            'files_scanned': len(files),
+            'files_scanned': len(files_to_scan),
             'nodes_added': len(nodes_added),
             'nodes_updated': len(nodes_updated),
             'errors': errors,
@@ -264,7 +315,7 @@ class ScanHandler(BaseHandler):
             return json.dumps(summary, indent=2)
         else:
             lines = [
-                f"Scanned {len(files)} files",
+                f"Scanned {len(files_to_scan)} files",
                 f"Added: {len(nodes_added)} nodes",
                 f"Updated: {len(nodes_updated)} nodes",
             ]
@@ -303,8 +354,9 @@ def scan_command(
 ):
     """Scan files for contextgit metadata and update index.
 
-    Discovers metadata blocks in Markdown files, creates/updates nodes,
-    generates IDs for 'auto' nodes, builds links, and updates sync status.
+    Discovers metadata blocks in Markdown, Python, and JavaScript/TypeScript files,
+    creates/updates nodes, generates IDs for 'auto' nodes, builds links, and
+    updates sync status.
 
     Examples:
         # Scan current directory (non-recursive)

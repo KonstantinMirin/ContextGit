@@ -509,6 +509,176 @@ git add .contextgit/requirements_index.yaml
 git commit -m "Update requirements"
 ```
 
+---
+
+### `contextgit validate` (v1.2+)
+
+Validate metadata in files without modifying the index. Useful for CI/CD pipelines.
+
+```bash
+contextgit validate [PATH] [--recursive] [--strict] [--format FORMAT]
+```
+
+**Options:**
+- `PATH`: File or directory to validate (default: current directory)
+- `--recursive, -r`: Validate directories recursively
+- `--strict`: Treat warnings as errors
+- `--format`: Output format (text or json)
+
+**Validates:**
+- Self-references in links
+- Missing upstream/downstream targets
+- Duplicate IDs
+- Orphan nodes
+- Circular dependencies
+
+**Examples:**
+```bash
+# Validate all docs
+contextgit validate docs/ -r
+
+# Strict validation for CI
+contextgit validate docs/ -r --strict --format json
+```
+
+---
+
+### `contextgit impact` (v1.2+)
+
+Analyze the downstream impact of changing a requirement.
+
+```bash
+contextgit impact <NODE_ID> [--format FORMAT]
+```
+
+**Options:**
+- `NODE_ID`: The requirement to analyze
+- `--format`: Output format (tree, json, or checklist)
+
+**Examples:**
+```bash
+# Show impact tree
+contextgit impact SR-010
+
+# JSON output for automation
+contextgit impact SR-010 --format json
+
+# Checklist for review
+contextgit impact SR-010 --format checklist
+```
+
+---
+
+### `contextgit hooks` (v1.2+)
+
+Manage git hooks for automatic scanning.
+
+```bash
+contextgit hooks install|uninstall|status
+```
+
+**Subcommands:**
+- `install`: Install git hooks (pre-commit, post-merge, pre-push)
+- `uninstall`: Remove installed git hooks
+- `status`: Show current hook installation status
+
+**Features:**
+- Preserves existing custom hooks
+- Idempotent installation
+- Pre-commit: scans changed files
+- Post-merge: full project scan
+- Pre-push: optional staleness check
+
+**Examples:**
+```bash
+# Install all hooks
+contextgit hooks install
+
+# Check status
+contextgit hooks status
+
+# Remove hooks
+contextgit hooks uninstall
+```
+
+---
+
+### `contextgit watch` (v1.2+)
+
+Watch directories for file changes and automatically scan.
+
+```bash
+contextgit watch [PATH] [--debounce MS]
+```
+
+**Options:**
+- `PATH`: Directory to watch (default: current directory)
+- `--debounce`: Debounce delay in milliseconds (default: 500)
+
+**Requirements:** Requires `watchdog` package (`pip install contextgit[watch]`)
+
+**Examples:**
+```bash
+# Watch docs directory
+contextgit watch docs/
+
+# Watch with custom debounce
+contextgit watch docs/ --debounce 1000
+```
+
+---
+
+### `contextgit mcp-server` (v1.2+)
+
+Start an MCP (Model Context Protocol) server for native LLM integration.
+
+```bash
+contextgit mcp-server
+```
+
+**Requirements:** Requires `mcp` and `pydantic` packages (`pip install contextgit[mcp]`)
+
+**MCP Read Tools:**
+- `contextgit_relevant_for_file`: Find requirements for a source file
+- `contextgit_extract`: Extract requirement snippet
+- `contextgit_status`: Get project health
+- `contextgit_impact_analysis`: Analyze downstream impact
+- `contextgit_search`: Search nodes by query
+
+**MCP Mutation Tools (v1.2+):**
+- `contextgit_scan`: Scan files and update the index
+- `contextgit_confirm`: Mark requirement as synchronized
+- `contextgit_next_id`: Generate next sequential ID
+- `contextgit_link`: Create manual traceability link
+- `contextgit_hooks`: Install/manage git hooks
+
+**MCP Resources Exposed:**
+- `contextgit://index`: Full requirements index
+- `contextgit://llm-instructions`: Usage guidelines
+
+**Full MCP Workflow Example:**
+```
+1. contextgit_relevant_for_file  → Find requirements for file
+2. contextgit_extract            → Get requirement details
+3. contextgit_next_id            → Generate ID for new code node
+4. [LLM implements code with metadata]
+5. contextgit_scan               → Update index with new node
+6. contextgit_confirm            → Mark requirement as implemented
+```
+
+**Usage with Claude Desktop:**
+Add to your Claude Desktop MCP configuration:
+```json
+{
+  "mcpServers": {
+    "contextgit": {
+      "command": "contextgit",
+      "args": ["mcp-server"]
+    }
+  }
+}
+```
+
 ## Workflows
 
 ### Workflow 1: Creating Linked Requirements
@@ -1106,6 +1276,11 @@ This ensures consistent checksums across platforms.
 | 3 | Node not found |
 | 4 | Invalid input |
 | 5 | File not found |
+| 6 | Stale links exist (v1.2+) |
+| 7 | Validation errors (v1.2+) |
+| 8 | Self-referential error (v1.2+) |
+| 9 | Circular dependency error (v1.2+) |
+| 10 | Missing dependency (v1.2+) |
 
 ---
 
@@ -1117,5 +1292,5 @@ This ensures consistent checksums across platforms.
 
 ---
 
-**Version**: 1.0.0
-**Last Updated**: 2025-12-02
+**Version**: 1.2.0
+**Last Updated**: 2025-12-05

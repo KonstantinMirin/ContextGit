@@ -1,4 +1,13 @@
-"""Handler for contextgit extract command."""
+"""Handler for contextgit extract command.
+
+contextgit:
+  id: C-105
+  type: code
+  title: "Extract Handler - Context Snippet Extraction"
+  status: active
+  upstream: [SR-012]
+  tags: [cli, extract, fr-7, llm-integration]
+"""
 
 from pathlib import Path
 import typer

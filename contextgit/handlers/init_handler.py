@@ -1,4 +1,13 @@
-"""Handler for contextgit init command."""
+"""Handler for contextgit init command.
+
+contextgit:
+  id: C-100
+  type: code
+  title: "Init Handler - Project Initialization Implementation"
+  status: active
+  upstream: [SR-012]
+  tags: [cli, initialization, fr-1]
+"""
 
 import json
 import os
@@ -30,11 +39,12 @@ This project uses **contextgit** for requirements traceability in LLM-assisted d
 
 contextgit is a CLI tool that:
 - Tracks traceability from business requirements → system specs → architecture → code → tests
-- Embeds metadata in Markdown files (YAML frontmatter or HTML comments)
+- Embeds metadata in Markdown, Python, and JavaScript/TypeScript files
 - Maintains a central index (`.contextgit/requirements_index.yaml`)
 - Detects staleness via checksums when upstream requirements change
 - Extracts precise context snippets for LLM consumption
 - Provides JSON output for programmatic access
+- Supports MCP (Model Context Protocol) for native LLM integration
 
 ## Detection
 
@@ -55,6 +65,9 @@ contextgit extract <ID> --format json
 
 # Show full details of a requirement
 contextgit show <ID> --format json
+
+# Analyze downstream impact of changes
+contextgit impact <ID> --format json
 ```
 
 ### After Modifying Requirements or Documentation
@@ -65,6 +78,9 @@ contextgit scan docs/ --recursive
 
 # Check for broken or stale links
 contextgit status --stale
+
+# Validate metadata without modifying index
+contextgit validate docs/ --recursive
 ```
 
 ### When Adding New Requirements
@@ -74,16 +90,10 @@ contextgit status --stale
 contextgit next-id <type>
 # Types: business, system, architecture, code, test, decision
 
-# 2. Create the Markdown file with YAML frontmatter:
-# ---
-# contextgit:
-#   id: <generated-id>
-#   type: <type>
-#   title: "Your requirement title"
-#   status: active
-#   upstream: []
-#   downstream: []
-# ---
+# 2. Create the file with metadata:
+# Markdown: YAML frontmatter or HTML comments
+# Python: Docstring or comment block
+# JavaScript/TypeScript: JSDoc block
 
 # 3. Register in the index
 contextgit scan docs/ --recursive
@@ -95,9 +105,12 @@ contextgit scan docs/ --recursive
 # 1. Find stale/affected items
 contextgit status --stale --format json
 
-# 2. Review and update downstream items as needed
+# 2. See full impact analysis
+contextgit impact <ID> --format json
 
-# 3. Mark as synchronized after updating
+# 3. Review and update downstream items as needed
+
+# 4. Mark as synchronized after updating
 contextgit confirm <ID>
 ```
 
@@ -105,9 +118,10 @@ contextgit confirm <ID>
 
 ## Command Reference
 
+### Core Commands
 | Command | Purpose | Example |
 |---------|---------|---------|
-| `contextgit init` | Initialize a project | `contextgit init` |
+| `contextgit init` | Initialize a project | `contextgit init --setup-llm` |
 | `contextgit scan <path> -r` | Scan files and update index | `contextgit scan docs/ -r` |
 | `contextgit status` | Show project health | `contextgit status --stale` |
 | `contextgit show <ID>` | Display requirement details | `contextgit show SR-010 --format json` |
@@ -118,13 +132,27 @@ contextgit confirm <ID>
 | `contextgit confirm <ID>` | Mark as synchronized | `contextgit confirm SR-010` |
 | `contextgit fmt` | Format index for git | `contextgit fmt` |
 
+### Validation & Analysis Commands
+| Command | Purpose | Example |
+|---------|---------|---------|
+| `contextgit validate <path>` | Validate metadata | `contextgit validate docs/ -r --strict` |
+| `contextgit impact <ID>` | Analyze downstream impact | `contextgit impact SR-010 --format json` |
+
+### Automation Commands
+| Command | Purpose | Example |
+|---------|---------|---------|
+| `contextgit hooks install` | Install git hooks | `contextgit hooks install` |
+| `contextgit hooks status` | Check hook status | `contextgit hooks status` |
+| `contextgit watch <path>` | Watch for file changes | `contextgit watch docs/` |
+| `contextgit mcp-server` | Start MCP server | `contextgit mcp-server` |
+
 **Always use `--format json` when parsing output programmatically.**
 
 ---
 
 ## Metadata Formats
 
-### YAML Frontmatter (Recommended)
+### Markdown: YAML Frontmatter (Recommended)
 
 ```markdown
 ---
@@ -143,7 +171,7 @@ contextgit:
 The system shall provide secure user authentication...
 ```
 
-### Inline HTML Comments
+### Markdown: Inline HTML Comments
 
 ```markdown
 <!-- contextgit
@@ -155,8 +183,34 @@ upstream: [BR-001]
 -->
 
 ## Password Reset
+```
 
-The system shall provide a secure password reset mechanism...
+### Python: Docstring
+
+```python
+"""
+contextgit:
+  id: C-001
+  type: code
+  title: Authentication module
+  upstream: [SR-010]
+"""
+
+def authenticate(email, password):
+    ...
+```
+
+### JavaScript/TypeScript: JSDoc
+
+```javascript
+/**
+ * @contextgit
+ * id: C-002
+ * type: code
+ * title: Login handler
+ * upstream: [SR-010]
+ */
+export function handleLogin(req, res) { ... }
 ```
 
 ---
@@ -189,10 +243,12 @@ The system shall provide a secure password reset mechanism...
 
 1. **Extract, don't load entire files**: Use `contextgit extract <ID>` to get only the relevant section.
 2. **Check staleness before changes**: Run `contextgit status --stale` to understand current state.
-3. **Scan after modifications**: Always run `contextgit scan` after editing requirement files.
-4. **Use JSON output**: Add `--format json` for reliable parsing.
-5. **Maintain traceability**: When creating new items, always specify `upstream` links.
-6. **Confirm after updates**: Run `contextgit confirm <ID>` after updating downstream items.
+3. **Analyze impact**: Use `contextgit impact <ID>` before making significant changes.
+4. **Scan after modifications**: Always run `contextgit scan` after editing requirement files.
+5. **Use JSON output**: Add `--format json` for reliable parsing.
+6. **Maintain traceability**: When creating new items, always specify `upstream` links.
+7. **Confirm after updates**: Run `contextgit confirm <ID>` after updating downstream items.
+8. **Validate before committing**: Run `contextgit validate` to catch issues early.
 
 ---
 
@@ -202,16 +258,64 @@ The system shall provide a secure password reset mechanism...
 # 1. Find the requirement to implement
 contextgit show SR-010 --format json
 
-# 2. Extract the full context
+# 2. Check what will be affected
+contextgit impact SR-010 --format json
+
+# 3. Extract the full context
 contextgit extract SR-010
 
-# 3. Implement the code...
+# 4. Implement the code...
 
-# 4. After implementation, scan to update links
+# 5. After implementation, scan to update links
 contextgit scan src/ --recursive
 
-# 5. Verify traceability
+# 6. Verify traceability
 contextgit status
+```
+
+---
+
+## MCP Server Integration
+
+contextgit provides an MCP (Model Context Protocol) server for native LLM integration.
+This allows Claude Desktop, Claude Code, and other MCP-compatible tools to interact
+directly with contextgit without CLI commands.
+
+### Starting the MCP Server
+
+```bash
+contextgit mcp-server
+```
+
+### MCP Read Tools
+
+| Tool | Purpose |
+|------|---------|
+| `contextgit_status` | Get project health status |
+| `contextgit_search` | Search requirements by keyword |
+| `contextgit_extract` | Extract requirement text |
+| `contextgit_impact_analysis` | Analyze downstream impact |
+| `contextgit_relevant_for_file` | Find requirements for a file |
+
+### MCP Mutation Tools
+
+| Tool | Purpose |
+|------|---------|
+| `contextgit_scan` | Scan files and update index |
+| `contextgit_confirm` | Mark requirement as synchronized |
+| `contextgit_next_id` | Generate next sequential ID |
+| `contextgit_link` | Create manual traceability link |
+| `contextgit_hooks` | Install/manage git hooks |
+
+### Full MCP Workflow Example
+
+```
+1. contextgit_relevant_for_file  → Find requirements for file
+2. contextgit_extract            → Get requirement details
+3. contextgit_next_id            → Generate ID for new code node
+4. [Implement code with metadata]
+5. contextgit_scan               → Update index
+6. contextgit_confirm            → Mark as implemented
 ```
 
 ---
@@ -238,27 +342,35 @@ Before modifying `docs/`:
 ```bash
 contextgit relevant-for-file <path>
 contextgit extract <ID> --format json
+contextgit impact <ID> --format json  # Check downstream effects
 ```
 
 After modifying `docs/`:
 ```bash
 contextgit scan docs/ --recursive
 contextgit status --stale
+contextgit validate docs/ -r  # Validate without modifying
 ```
 
 When adding new requirements:
 ```bash
 contextgit next-id <type>  # Get ID
-# Add YAML frontmatter with ID
+# Add metadata (YAML frontmatter, Python docstring, or JSDoc)
 contextgit scan docs/ --recursive
 ```
 
 When upstream changes:
 ```bash
 contextgit status --stale
+contextgit impact <ID>  # See full impact
 # Update downstream items
 contextgit confirm <ID>
 ```
+
+### Supported File Formats
+- Markdown (.md): YAML frontmatter or HTML comments
+- Python (.py): Docstrings or comment blocks
+- JavaScript/TypeScript: JSDoc blocks
 
 ### Detection
 This is a contextgit project if `.contextgit/config.yaml` exists.
@@ -278,19 +390,27 @@ This project uses **contextgit** for requirements traceability.
    ```bash
    contextgit relevant-for-file <path>
    contextgit extract <ID> --format json
+   contextgit impact <ID> --format json  # Check downstream effects
    ```
 
 2. **After modifying docs:**
    ```bash
    contextgit scan docs/ --recursive
    contextgit status --stale
+   contextgit validate docs/ -r  # Validate metadata
    ```
 
 3. **When requirements change:**
    ```bash
    contextgit status --stale
+   contextgit impact <ID>  # See full impact
    contextgit confirm <ID>  # After updating downstream
    ```
+
+### Supported File Formats
+- **Markdown**: YAML frontmatter or HTML comments
+- **Python**: Docstrings or comment blocks
+- **JavaScript/TypeScript**: JSDoc blocks
 
 Always use `--format json` for parsing output.
 '''
