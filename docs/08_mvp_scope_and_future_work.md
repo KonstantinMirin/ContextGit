@@ -1,3 +1,14 @@
+---
+contextgit:
+  id: SR-015
+  type: system
+  title: MVP scope definition and future roadmap
+  status: active
+  upstream:
+    - BR-001
+  tags: [mvp, scope, roadmap]
+---
+
 # MVP Scope and Future Work
 
 ## Overview

@@ -1,3 +1,14 @@
+---
+contextgit:
+  id: AR-005
+  type: architecture
+  title: Module specifications and API documentation
+  status: active
+  upstream:
+    - AR-003
+  tags: [mvp, modules, api]
+---
+
 # Module Specifications
 
 ## 1. Introduction

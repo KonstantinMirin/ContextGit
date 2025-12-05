@@ -9,7 +9,7 @@ nodes:
     - Design Document
     - Database Schema
   status: active
-  last_updated: '2025-12-05T13:04:03.504276+00:00'
+  last_updated: '2025-12-05T15:28:01.981054+00:00'
   checksum: 94427493f6efb7050ac3efda49b2f198a5f0f56eeec5deee4d6ac7ef799a39a2
   llm_generated: false
   tags:
@@ -24,11 +24,75 @@ nodes:
     - Design Document
     - API Endpoints
   status: active
-  last_updated: '2025-12-05T13:04:03.811267+00:00'
+  last_updated: '2025-12-05T15:29:20.829886+00:00'
   checksum: eae237eb5e4bfd89f5410ff782eaf110d404710dbb96c690734d1c6e15b265d7
   llm_generated: false
   tags:
   - api
+- id: AR-003
+  type: architecture
+  title: Software architecture document for contextgit
+  file: design/01_software_architecture.md
+  location:
+    kind: heading
+    path:
+    - Software Architecture Document
+  status: active
+  last_updated: '2025-12-05T15:28:02.003282+00:00'
+  checksum: ac3712c0f92b8f7aa87b8af782f17abe97507ac71066999eafc39745980411f6
+  llm_generated: false
+  tags:
+  - architecture
+  - modules
+  - mvp
+- id: AR-004
+  type: architecture
+  title: Detailed software design with class specifications
+  file: design/02_detailed_design.md
+  location:
+    kind: heading
+    path:
+    - Detailed Software Design Document
+  status: active
+  last_updated: '2025-12-05T15:28:01.997120+00:00'
+  checksum: c51bef224a5a992e553b12e4dd6b8ed9822fce634eae24ced2575837f7736e4c
+  llm_generated: false
+  tags:
+  - classes
+  - design
+  - mvp
+- id: AR-005
+  type: architecture
+  title: Module specifications and API documentation
+  file: design/03_module_specifications.md
+  location:
+    kind: heading
+    path:
+    - Module Specifications
+  status: active
+  last_updated: '2025-12-05T15:28:01.992973+00:00'
+  checksum: 430b676838a1700189a8aef06bce31b2ea2e1aea684b07013fca68c236ee57a8
+  llm_generated: false
+  tags:
+  - api
+  - modules
+  - mvp
+- id: AR-006
+  type: architecture
+  title: High-level architecture and design for contextgit
+  file: docs/04_architecture_overview.md
+  location:
+    kind: heading
+    path:
+    - Architecture Overview
+  status: active
+  last_updated: '2025-12-05T15:28:01.974028+00:00'
+  checksum: ee79c65d123876a5dca33901e6ffcb2f312507f31c8706e2856e4f3b80b1c5a3
+  llm_generated: false
+  tags:
+  - architecture
+  - design
+  - mvp
 - id: BR-001
   type: business
   title: User Login Feature
@@ -38,10 +102,42 @@ nodes:
     start: 96
     end: 110
   status: active
-  last_updated: '2025-12-05T13:01:31.565504+00:00'
+  last_updated: '2025-12-05T15:28:01.981506+00:00'
   checksum: f0819c8f7ccb9c3a4322e7af15ac96dbcccf34445ca25490368df603841c6c77
   llm_generated: false
   tags: []
+- id: BR-002
+  type: business
+  title: User stories and personas for contextgit
+  file: docs/02_user_stories.md
+  location:
+    kind: heading
+    path:
+    - User Stories
+  status: active
+  last_updated: '2025-12-05T15:28:01.967437+00:00'
+  checksum: 37f3ea715645245cc886fa607273aa1b51ad3d3b3c0bfce08dc62a5fac977fe6
+  llm_generated: false
+  tags:
+  - mvp
+  - personas
+  - user-stories
+- id: BR-003
+  type: business
+  title: contextgit product vision and requirements
+  file: docs/01_product_overview.md
+  location:
+    kind: heading
+    path:
+    - Product Overview
+  status: active
+  last_updated: '2025-12-05T15:28:01.975455+00:00'
+  checksum: adaaf9cb84de446df79b798a9d8905547bdd7b2be86aabe3354683536a64ea32
+  llm_generated: false
+  tags:
+  - mvp
+  - planning
+  - product
 - id: C-002
   type: code
   title: Function Level
@@ -51,7 +147,7 @@ nodes:
     path:
     - 'id: C-002'
   status: active
-  last_updated: '2025-12-05T13:01:31.587403+00:00'
+  last_updated: '2025-12-05T15:28:02.059836+00:00'
   checksum: bf01e1304d0d95021517a74006ffde1df1442608633d9a73ba2b2adab3c66c39
   llm_generated: false
   tags: []
@@ -64,7 +160,7 @@ nodes:
     path:
     - 'id: C-016'
   status: active
-  last_updated: '2025-12-05T13:04:06.584866+00:00'
+  last_updated: '2025-12-05T15:28:02.028997+00:00'
   checksum: 22ca1b07349d4cd65da08803066c3681b449204d8b34987e124cab983db3a520
   llm_generated: false
   tags:
@@ -79,7 +175,7 @@ nodes:
     start: 11
     end: 133
   status: active
-  last_updated: '2025-12-05T13:01:32.282456+00:00'
+  last_updated: '2025-12-05T15:28:03.076580+00:00'
   checksum: 7d33f2df13a3b8b41c470883f51a07cfdcdab7fb5933ae5ff6d40dba02903ad9
   llm_generated: false
   tags:
@@ -95,7 +191,7 @@ nodes:
     start: 33
     end: 133
   status: active
-  last_updated: '2025-12-05T13:01:32.282562+00:00'
+  last_updated: '2025-12-05T15:28:03.076687+00:00'
   checksum: b00e92f4335e887290be9a8870e576029fb3f6e4ba1061575c91956857919d74
   llm_generated: false
   tags:
@@ -111,7 +207,7 @@ nodes:
     start: 50
     end: 133
   status: active
-  last_updated: '2025-12-05T13:04:06.921225+00:00'
+  last_updated: '2025-12-05T15:29:21.214043+00:00'
   checksum: a49f77ceda072bb48ad26771e9f3f534215742406fdeae584d738685838148df
   llm_generated: false
   tags: []
@@ -124,7 +220,7 @@ nodes:
     start: 85
     end: 133
   status: active
-  last_updated: '2025-12-05T13:01:32.282831+00:00'
+  last_updated: '2025-12-05T15:28:03.076945+00:00'
   checksum: 84ccdc31444f7e209094775c742b33d5596b98b87b82848e89cda4432a6ec07c
   llm_generated: false
   tags: []
@@ -137,7 +233,7 @@ nodes:
     start: 98
     end: 133
   status: active
-  last_updated: '2025-12-05T13:01:32.282904+00:00'
+  last_updated: '2025-12-05T15:28:03.077021+00:00'
   checksum: de829b37584962bf95be665d4aa631864be7ce7eb8fde5958cf797fab9ad871f
   llm_generated: false
   tags:
@@ -152,7 +248,7 @@ nodes:
     start: 115
     end: 133
   status: active
-  last_updated: '2025-12-05T13:01:32.282979+00:00'
+  last_updated: '2025-12-05T15:28:03.077094+00:00'
   checksum: 4822c6a4286cd750639935ecf7fe17b0a04d16e5105d2e933b8f1527162f4d34
   llm_generated: false
   tags: []
@@ -165,7 +261,7 @@ nodes:
     start: 122
     end: 133
   status: active
-  last_updated: '2025-12-05T13:01:32.283045+00:00'
+  last_updated: '2025-12-05T15:28:03.077165+00:00'
   checksum: 1c36508aa6692044e8be95b9aa1cc16925f052ce1cd03c3568b17a4d8fa3af5d
   llm_generated: false
   tags: []
@@ -178,7 +274,7 @@ nodes:
     start: 9
     end: 126
   status: active
-  last_updated: '2025-12-05T13:01:32.288871+00:00'
+  last_updated: '2025-12-05T15:28:03.083426+00:00'
   checksum: c86393025ea836a8986c0411427f0cb84965420189c068b013951911d94aba30
   llm_generated: false
   tags:
@@ -193,7 +289,7 @@ nodes:
     start: 24
     end: 126
   status: active
-  last_updated: '2025-12-05T13:04:07.234718+00:00'
+  last_updated: '2025-12-05T15:28:03.083534+00:00'
   checksum: 2edc5698c01ba8dff42e6a6c16c910195542aeb0e317226d64189933690f1e5f
   llm_generated: false
   tags: []
@@ -206,7 +302,7 @@ nodes:
     start: 39
     end: 126
   status: active
-  last_updated: '2025-12-05T13:01:32.289055+00:00'
+  last_updated: '2025-12-05T15:28:03.083622+00:00'
   checksum: cb5613411ebc3232fb6d14b67a70d04966dd527f315b105fb289708cd3ad945a
   llm_generated: false
   tags:
@@ -221,7 +317,7 @@ nodes:
     start: 56
     end: 126
   status: active
-  last_updated: '2025-12-05T13:01:32.289133+00:00'
+  last_updated: '2025-12-05T15:28:03.083701+00:00'
   checksum: f87e89de24ecc6fba864f9a2b8af8cda942cf239e84aa2a4033cf0880a417815
   llm_generated: false
   tags: []
@@ -234,7 +330,7 @@ nodes:
     start: 68
     end: 126
   status: active
-  last_updated: '2025-12-05T13:01:32.289206+00:00'
+  last_updated: '2025-12-05T15:28:03.083781+00:00'
   checksum: 389fa71cdf6b92f211b8a9a44b8dc31f93adacf9a4ee1a6c8f4abc0f8606ce8c
   llm_generated: false
   tags:
@@ -250,7 +346,7 @@ nodes:
     start: 89
     end: 126
   status: active
-  last_updated: '2025-12-05T13:01:32.289275+00:00'
+  last_updated: '2025-12-05T15:28:03.083857+00:00'
   checksum: 75fea28c7d1bc370c92fce507dcd6dd92fcc4a8be1b78e0b0a67629f1c40091f
   llm_generated: false
   tags: []
@@ -263,7 +359,7 @@ nodes:
     start: 111
     end: 126
   status: active
-  last_updated: '2025-12-05T13:01:32.289340+00:00'
+  last_updated: '2025-12-05T15:28:03.083927+00:00'
   checksum: 12e8c33851dc5ad161e278a553b37a54ddb6112a2c51d243b54bc5b60dbc4eeb
   llm_generated: false
   tags:
@@ -280,7 +376,7 @@ nodes:
     - Common Workflows
     - 'Workflow 4: Update an Existing Requirement'
   status: active
-  last_updated: '2025-12-05T13:01:31.551778+00:00'
+  last_updated: '2025-12-05T15:28:01.960997+00:00'
   checksum: d3305d11938e749153a35f82adb2df5efd100edb81b979355d3988168b5c9c67
   llm_generated: false
   tags: []
@@ -293,7 +389,7 @@ nodes:
     path:
     - 'id: auto'
   status: draft
-  last_updated: '2025-12-05T13:01:31.582019+00:00'
+  last_updated: '2025-12-05T15:28:02.029825+00:00'
   checksum: 07a8daa0a96876d7d990cfc5ffab8cb6ad1fffcedd648155a6d863f7211b4d86
   llm_generated: false
   tags: []
@@ -306,20 +402,20 @@ nodes:
     start: 71
     end: 133
   status: draft
-  last_updated: '2025-12-05T13:01:32.282752+00:00'
+  last_updated: '2025-12-05T15:28:03.076868+00:00'
   checksum: d85b97b8bb2115f142300cfafea626b6ccfcecabd3565a3acfb0171930a86e5a
   llm_generated: false
   tags: []
 - id: C-100
   type: code
   title: "Init Handler - Project Initialization Implementation"
-  file: contextgit/handlers/init_handler.py
+  file: debian-package/usr/local/lib/python3.12/dist-packages/contextgit/handlers/init_handler.py
   location:
     kind: heading
     path:
     - Comprehensive LLM instructions template
   status: active
-  last_updated: '2025-12-05T13:34:30.672627+00:00'
+  last_updated: '2025-12-05T15:28:03.033664+00:00'
   checksum: 6a7b5a532a40b283a752caaf2b534cf87aeb2dc798a92bd67380b478c3bb55c0
   llm_generated: false
   tags:
@@ -329,13 +425,13 @@ nodes:
 - id: C-101
   type: code
   title: "Scan Handler - File Scanning and Index Update Implementation"
-  file: contextgit/handlers/scan_handler.py
+  file: debian-package/usr/local/lib/python3.12/dist-packages/contextgit/handlers/scan_handler.py
   location:
     kind: lines
     start: 1
     end: 390
   status: active
-  last_updated: '2025-12-05T13:34:30.662871+00:00'
+  last_updated: '2025-12-05T15:28:03.020162+00:00'
   checksum: c7ad9a1b19ea55979598c540a65451ec00584e1c959234708efad0f4fb8373e7
   llm_generated: false
   tags:
@@ -346,13 +442,13 @@ nodes:
 - id: C-102
   type: code
   title: "CLI Command Registry - Central Command Definitions"
-  file: contextgit/cli/commands.py
+  file: debian-package/usr/local/lib/python3.12/dist-packages/contextgit/cli/commands.py
   location:
     kind: heading
     path:
     - Import all command functions from handlers
   status: active
-  last_updated: '2025-12-05T13:34:30.658275+00:00'
+  last_updated: '2025-12-05T15:28:03.010888+00:00'
   checksum: a6379a60050ee11af9e3237f5dd27466d365404a6585e7930082e3dd61e2dbd2
   llm_generated: false
   tags:
@@ -362,13 +458,13 @@ nodes:
 - id: C-103
   type: code
   title: "Linking Engine - Graph Operations and Sync Status"
-  file: contextgit/domain/linking/engine.py
+  file: debian-package/usr/local/lib/python3.12/dist-packages/contextgit/domain/linking/engine.py
   location:
     kind: lines
     start: 1
     end: 460
   status: active
-  last_updated: '2025-12-05T13:34:30.689339+00:00'
+  last_updated: '2025-12-05T15:28:03.058668+00:00'
   checksum: 9f16f6e56e1fc4195746a64a464d8ccdee53cd48886e245edd1ce5b80c3805a8
   llm_generated: false
   tags:
@@ -380,13 +476,13 @@ nodes:
 - id: C-104
   type: code
   title: "Status Handler - Project Health Reporting"
-  file: contextgit/handlers/status_handler.py
+  file: debian-package/usr/local/lib/python3.12/dist-packages/contextgit/handlers/status_handler.py
   location:
     kind: heading
     path:
     - CLI command function (can be imported by main CLI module)
   status: active
-  last_updated: '2025-12-05T13:34:30.664145+00:00'
+  last_updated: '2025-12-05T15:28:03.021750+00:00'
   checksum: d300c888d3affbc2089e323137259294dde93c7fc09aa992ba5936bd26396349
   llm_generated: false
   tags:
@@ -397,13 +493,13 @@ nodes:
 - id: C-105
   type: code
   title: "Extract Handler - Context Snippet Extraction"
-  file: contextgit/handlers/extract_handler.py
+  file: debian-package/usr/local/lib/python3.12/dist-packages/contextgit/handlers/extract_handler.py
   location:
     kind: lines
     start: 1
     end: 116
   status: active
-  last_updated: '2025-12-05T13:34:30.665332+00:00'
+  last_updated: '2025-12-05T15:28:03.023395+00:00'
   checksum: d9f3bf4ba8d5918000e29c2fce9adfc7b23fd7f98514eb457e9c8ce180cb6e44
   llm_generated: false
   tags:
@@ -414,13 +510,13 @@ nodes:
 - id: C-106
   type: code
   title: "Link Handler - Manual Link Management"
-  file: contextgit/handlers/link_handler.py
+  file: debian-package/usr/local/lib/python3.12/dist-packages/contextgit/handlers/link_handler.py
   location:
     kind: lines
     start: 1
     end: 172
   status: active
-  last_updated: '2025-12-05T13:34:30.673878+00:00'
+  last_updated: '2025-12-05T15:28:03.035191+00:00'
   checksum: aff118f3995f04c293360cb43bf01a905301cf866adb359bb560a445f7c6da96
   llm_generated: false
   tags:
@@ -431,13 +527,13 @@ nodes:
 - id: C-107
   type: code
   title: "Confirm Handler - Synchronization Confirmation"
-  file: contextgit/handlers/confirm_handler.py
+  file: debian-package/usr/local/lib/python3.12/dist-packages/contextgit/handlers/confirm_handler.py
   location:
     kind: lines
     start: 1
     end: 143
   status: active
-  last_updated: '2025-12-05T13:34:30.661380+00:00'
+  last_updated: '2025-12-05T15:28:03.017460+00:00'
   checksum: ff9d57a7260c9befb0d5d261d3a6f14a5711cb5aea7a45cfe5920dcab7c94160
   llm_generated: false
   tags:
@@ -448,13 +544,13 @@ nodes:
 - id: C-108
   type: code
   title: "Next-ID Handler - Sequential ID Generation"
-  file: contextgit/handlers/next_id_handler.py
+  file: debian-package/usr/local/lib/python3.12/dist-packages/contextgit/handlers/next_id_handler.py
   location:
     kind: lines
     start: 1
     end: 132
   status: active
-  last_updated: '2025-12-05T13:34:30.675084+00:00'
+  last_updated: '2025-12-05T15:28:03.036606+00:00'
   checksum: 1c44301b0f9bc881bcf21248ea61386bdd2bca88b57e0b99c62d25f40ff39d8a
   llm_generated: false
   tags:
@@ -464,13 +560,13 @@ nodes:
 - id: C-109
   type: code
   title: "Relevant Handler - File-Based Relevance Query"
-  file: contextgit/handlers/relevant_handler.py
+  file: debian-package/usr/local/lib/python3.12/dist-packages/contextgit/handlers/relevant_handler.py
   location:
     kind: lines
     start: 1
     end: 271
   status: active
-  last_updated: '2025-12-05T13:34:30.669670+00:00'
+  last_updated: '2025-12-05T15:28:03.029322+00:00'
   checksum: ac53818ee5d120eabc686d9e6d78fc517634cad044e83573ecfa6866a64aa970
   llm_generated: false
   tags:
@@ -481,13 +577,13 @@ nodes:
 - id: C-110
   type: code
   title: "Show Handler - Node Details Display"
-  file: contextgit/handlers/show_handler.py
+  file: debian-package/usr/local/lib/python3.12/dist-packages/contextgit/handlers/show_handler.py
   location:
     kind: lines
     start: 1
     end: 198
   status: active
-  last_updated: '2025-12-05T13:34:30.679149+00:00'
+  last_updated: '2025-12-05T15:28:03.041819+00:00'
   checksum: 9f3feb58585110eb2e9a607d2c5d265bc260587ec6d578c0c701f6441c6458fc
   llm_generated: false
   tags:
@@ -498,13 +594,13 @@ nodes:
 - id: C-111
   type: code
   title: "Fmt Handler - Index File Formatting"
-  file: contextgit/handlers/fmt_handler.py
+  file: debian-package/usr/local/lib/python3.12/dist-packages/contextgit/handlers/fmt_handler.py
   location:
     kind: lines
     start: 1
     end: 86
   status: active
-  last_updated: '2025-12-05T13:34:30.677914+00:00'
+  last_updated: '2025-12-05T15:28:03.040289+00:00'
   checksum: 42df74b814a9eb86e2a5f4be52d83ebda6f972fcdd80169327bd3d78b31dfdd2
   llm_generated: false
   tags:
@@ -515,13 +611,13 @@ nodes:
 - id: C-112
   type: code
   title: "Impact Handler - Downstream Impact Analysis"
-  file: contextgit/handlers/impact_handler.py
+  file: debian-package/usr/local/lib/python3.12/dist-packages/contextgit/handlers/impact_handler.py
   location:
     kind: heading
     path:
     - CLI command function (can be imported by main CLI module)
   status: active
-  last_updated: '2025-12-05T13:34:30.670993+00:00'
+  last_updated: '2025-12-05T15:28:03.031589+00:00'
   checksum: 9df11e4380507d559474f58dd075cb2d0e0a298c318d6e5b355b3150a6605a21
   llm_generated: false
   tags:
@@ -531,13 +627,13 @@ nodes:
 - id: C-113
   type: code
   title: "Validate Handler - Metadata Validation"
-  file: contextgit/handlers/validate_handler.py
+  file: debian-package/usr/local/lib/python3.12/dist-packages/contextgit/handlers/validate_handler.py
   location:
     kind: lines
     start: 1
     end: 538
   status: active
-  last_updated: '2025-12-05T13:34:30.676745+00:00'
+  last_updated: '2025-12-05T15:28:03.038792+00:00'
   checksum: 4f5b10f9e4971b3c2ff73bf9c43b749162487d3675c4a79403acd4aa09f8ea3d
   llm_generated: false
   tags:
@@ -547,13 +643,13 @@ nodes:
 - id: C-114
   type: code
   title: "Watch Handler - File System Monitoring"
-  file: contextgit/handlers/watch_handler.py
+  file: debian-package/usr/local/lib/python3.12/dist-packages/contextgit/handlers/watch_handler.py
   location:
     kind: lines
     start: 1
     end: 396
   status: active
-  last_updated: '2025-12-05T13:34:30.666826+00:00'
+  last_updated: '2025-12-05T15:28:03.025273+00:00'
   checksum: 669b25649920094ad9e4ddc344cbc32173e2c5c44778578e27b2e840a2a16cc6
   llm_generated: false
   tags:
@@ -564,13 +660,13 @@ nodes:
 - id: C-115
   type: code
   title: "Hooks Handler - Git Hook Integration"
-  file: contextgit/handlers/hooks_handler.py
+  file: debian-package/usr/local/lib/python3.12/dist-packages/contextgit/handlers/hooks_handler.py
   location:
     kind: heading
     path:
     - Hook script templates
   status: active
-  last_updated: '2025-12-05T13:34:30.668358+00:00'
+  last_updated: '2025-12-05T15:28:03.027202+00:00'
   checksum: b7c879abdcd6198a68ff54edefea7eba1a2f9de822f5acc55b7dbeb979407ce8
   llm_generated: false
   tags:
@@ -581,13 +677,13 @@ nodes:
 - id: C-116
   type: code
   title: "Index Manager - Atomic CRUD Operations"
-  file: contextgit/domain/index/manager.py
+  file: debian-package/usr/local/lib/python3.12/dist-packages/contextgit/domain/index/manager.py
   location:
     kind: lines
     start: 1
     end: 284
   status: active
-  last_updated: '2025-12-05T13:34:30.692049+00:00'
+  last_updated: '2025-12-05T15:28:03.062559+00:00'
   checksum: 9b044c2a90c9f012d292988e1238a7cdb176ea6bb2e4985821dcdbb9dcb375bc
   llm_generated: false
   tags:
@@ -598,13 +694,13 @@ nodes:
 - id: C-117
   type: code
   title: "Metadata Parser - YAML Frontmatter and HTML Comments"
-  file: contextgit/domain/metadata/parser.py
+  file: debian-package/usr/local/lib/python3.12/dist-packages/contextgit/domain/metadata/parser.py
   location:
     kind: lines
     start: 1
     end: 176
   status: active
-  last_updated: '2025-12-05T13:34:30.686566+00:00'
+  last_updated: '2025-12-05T15:28:03.054885+00:00'
   checksum: ed39104a8aa9aba5d658cf40146a516af426960da912ef2aee0bb443e704a5e3
   llm_generated: false
   tags:
@@ -615,13 +711,13 @@ nodes:
 - id: C-118
   type: code
   title: "Checksum Calculator - SHA-256 Change Detection"
-  file: contextgit/domain/checksum/calculator.py
+  file: debian-package/usr/local/lib/python3.12/dist-packages/contextgit/domain/checksum/calculator.py
   location:
     kind: lines
     start: 1
     end: 72
   status: active
-  last_updated: '2025-12-05T13:34:30.693222+00:00'
+  last_updated: '2025-12-05T15:28:03.064745+00:00'
   checksum: cfecd2b6155a145ca77b83fc422af9b5e9f4c1c0314ac5f21dfca1b82bfd362c
   llm_generated: false
   tags:
@@ -632,13 +728,13 @@ nodes:
 - id: C-119
   type: code
   title: "ID Generator - Sequential ID Generation"
-  file: contextgit/domain/id_gen/generator.py
+  file: debian-package/usr/local/lib/python3.12/dist-packages/contextgit/domain/id_gen/generator.py
   location:
     kind: lines
     start: 1
     end: 76
   status: active
-  last_updated: '2025-12-05T13:34:30.690655+00:00'
+  last_updated: '2025-12-05T15:28:03.060643+00:00'
   checksum: 30a2057f43059204d4bc72369efc54297d8f38d40ed3ea979e2c2e8caec9f620
   llm_generated: false
   tags:
@@ -648,13 +744,13 @@ nodes:
 - id: C-120
   type: code
   title: "Snippet Extractor - Context Extraction"
-  file: contextgit/domain/location/snippet.py
+  file: debian-package/usr/local/lib/python3.12/dist-packages/contextgit/domain/location/snippet.py
   location:
     kind: lines
     start: 1
     end: 202
   status: active
-  last_updated: '2025-12-05T13:34:30.694772+00:00'
+  last_updated: '2025-12-05T15:28:03.067832+00:00'
   checksum: 26a5e2d3d0cdfe0df39237731f1374a6f4253ae683ef47468dc5556610ae4c39
   llm_generated: false
   tags:
@@ -665,13 +761,13 @@ nodes:
 - id: C-121
   type: code
   title: "Location Resolver - Metadata Block Location"
-  file: contextgit/domain/location/resolver.py
+  file: debian-package/usr/local/lib/python3.12/dist-packages/contextgit/domain/location/resolver.py
   location:
     kind: lines
     start: 1
     end: 117
   status: active
-  last_updated: '2025-12-05T13:34:30.695970+00:00'
+  last_updated: '2025-12-05T15:28:03.069179+00:00'
   checksum: 57a8f2452cc22f4ba3996d87f04acc9871284e7f82d90230b74effd470ad617f
   llm_generated: false
   tags:
@@ -682,13 +778,13 @@ nodes:
 - id: C-122
   type: code
   title: "Config Manager - Project Configuration"
-  file: contextgit/domain/config/manager.py
+  file: debian-package/usr/local/lib/python3.12/dist-packages/contextgit/domain/config/manager.py
   location:
     kind: lines
     start: 1
     end: 91
   status: active
-  last_updated: '2025-12-05T13:34:30.687885+00:00'
+  last_updated: '2025-12-05T15:28:03.056841+00:00'
   checksum: 4aa2cdc5cb416849fbddab1f8c09cdcaed9f7d26b1f439c777e0aab342e85879
   llm_generated: false
   tags:
@@ -698,13 +794,13 @@ nodes:
 - id: C-123
   type: code
   title: "MCP Server - Model Context Protocol Integration"
-  file: contextgit/mcp/server.py
+  file: debian-package/usr/local/lib/python3.12/dist-packages/contextgit/mcp/server.py
   location:
     kind: heading
     path:
     - Overview
   status: active
-  last_updated: '2025-12-05T13:40:18.380669+00:00'
+  last_updated: '2025-12-05T15:28:03.014052+00:00'
   checksum: 1711459f1d92f68f31a7439343822a0cdcf3a61abf39aadf37b2ed180e47c793
   llm_generated: false
   tags:
@@ -714,13 +810,13 @@ nodes:
 - id: C-124
   type: code
   title: "Node Model - Requirement Entity Definition"
-  file: contextgit/models/node.py
+  file: debian-package/usr/local/lib/python3.12/dist-packages/contextgit/models/node.py
   location:
     kind: lines
     start: 1
     end: 99
   status: active
-  last_updated: '2025-12-05T13:34:30.682085+00:00'
+  last_updated: '2025-12-05T15:28:03.046946+00:00'
   checksum: c0664c0db20f09ed1ee315f51532ff1abdf52f85a6d8ce18adb230c8760d6daf
   llm_generated: false
   tags:
@@ -730,13 +826,13 @@ nodes:
 - id: C-125
   type: code
   title: "Link Model - Traceability Relationship Definition"
-  file: contextgit/models/link.py
+  file: debian-package/usr/local/lib/python3.12/dist-packages/contextgit/models/link.py
   location:
     kind: lines
     start: 1
     end: 98
   status: active
-  last_updated: '2025-12-05T13:34:30.680855+00:00'
+  last_updated: '2025-12-05T15:28:03.044381+00:00'
   checksum: 861344549c4c89ff05d586e6ba770b86d5851df32668dbc0c974dd8c4b1b0cc1
   llm_generated: false
   tags:
@@ -747,13 +843,13 @@ nodes:
 - id: C-126
   type: code
   title: "Python Scanner - Docstring Metadata Extraction"
-  file: contextgit/scanners/python.py
+  file: debian-package/usr/local/lib/python3.12/dist-packages/contextgit/scanners/python.py
   location:
     kind: lines
     start: 1
     end: 206
   status: active
-  last_updated: '2025-12-05T13:34:30.685191+00:00'
+  last_updated: '2025-12-05T15:28:03.053021+00:00'
   checksum: aa385ccd372462b1c403103fc9303c4e0f501001e2b509bab05e1b08b928505d
   llm_generated: false
   tags:
@@ -764,13 +860,13 @@ nodes:
 - id: C-127
   type: code
   title: "JavaScript Scanner - JSDoc Metadata Extraction"
-  file: contextgit/scanners/javascript.py
+  file: debian-package/usr/local/lib/python3.12/dist-packages/contextgit/scanners/javascript.py
   location:
     kind: lines
     start: 1
     end: 182
   status: active
-  last_updated: '2025-12-05T13:34:30.683757+00:00'
+  last_updated: '2025-12-05T15:28:03.050726+00:00'
   checksum: 3919495246de31dc257fb36cec7f0ea84b7aeb90224ed06ae34797e3e934fc1a
   llm_generated: false
   tags:
@@ -779,20 +875,6 @@ nodes:
   - multi-format
   - scanners
   - typescript
-- id: SR-001
-  type: system
-  title: API Endpoint
-  file: TASK3_IMPLEMENTATION_SUMMARY.md
-  location:
-    kind: heading
-    path:
-    - Content here
-    - Python Files (.py, .pyw)
-  status: active
-  last_updated: '2025-12-05T13:04:00.510580+00:00'
-  checksum: 52f4a1e5ff7e391a67474d9de972844e842562cc7f77f8fcb51d194b3ba3e3bf
-  llm_generated: false
-  tags: []
 - id: SR-002
   type: system
   title: "Test"
@@ -805,7 +887,7 @@ nodes:
     - 2.2 Metadata Parser Test Cases
     - 'TC-MP-003: Parse Multiple Inline Blocks'
   status: active
-  last_updated: '2025-12-05T13:01:31.567236+00:00'
+  last_updated: '2025-12-05T15:28:01.988102+00:00'
   checksum: 53ae91c6063c13914ea0b88f2ed455ec93a7135c35b0c7dcb01566ff77b5b982
   llm_generated: false
   tags: []
@@ -820,7 +902,7 @@ nodes:
     - Functional Requirements
     - 'FR-3: File Scanning and Index Update'
   status: active
-  last_updated: '2025-12-05T13:04:00.814264+00:00'
+  last_updated: '2025-12-05T15:29:20.413057+00:00'
   checksum: 2f8794e906c4be0a1d9fe329fd0198896fa429d1276cf16e25ad182d9c9cdb8e
   llm_generated: false
   tags: []
@@ -834,7 +916,7 @@ nodes:
     - System Design – Logging
     - JSON Output Schemas
   status: active
-  last_updated: '2025-12-05T13:01:31.549274+00:00'
+  last_updated: '2025-12-05T15:28:01.958214+00:00'
   checksum: 0d963c820645a577d10cff54353aab770f6231b339194233d1220d515f56c208
   llm_generated: false
   tags: []
@@ -847,7 +929,7 @@ nodes:
     path:
     - System Requirements
   status: active
-  last_updated: '2025-12-05T13:04:01.150216+00:00'
+  last_updated: '2025-12-05T15:28:01.964786+00:00'
   checksum: 572f0b4ea0cce95ff51abbb0fe05e051820baad38a9f0d630364b32907db9f90
   llm_generated: false
   tags:
@@ -864,10 +946,58 @@ nodes:
     - 'System Requirement: User Authentication'
     - User Authentication
   status: active
-  last_updated: '2025-12-05T13:04:01.472032+00:00'
+  last_updated: '2025-12-05T15:28:01.950234+00:00'
   checksum: 97ac6847a4be02aa9a189ee507a3a1864a375254541d40c448be897b0ea64adc
   llm_generated: false
   tags: []
+- id: SR-014
+  type: system
+  title: CLI command specifications for contextgit
+  file: docs/06_cli_specification.md
+  location:
+    kind: heading
+    path:
+    - CLI Specification
+  status: active
+  last_updated: '2025-12-05T15:28:01.971118+00:00'
+  checksum: 563ffb76f1476109a0ccdf84de2ff291e74222c1a8c2ede61afeb955742ff769
+  llm_generated: false
+  tags:
+  - cli
+  - mvp
+  - specification
+- id: SR-015
+  type: system
+  title: MVP scope definition and future roadmap
+  file: docs/08_mvp_scope_and_future_work.md
+  location:
+    kind: heading
+    path:
+    - MVP Scope and Future Work
+  status: active
+  last_updated: '2025-12-05T15:28:01.952813+00:00'
+  checksum: d26b3f188bde131b72c6de0728333aad5ab4a8bb18a4af1af459028201f53767
+  llm_generated: false
+  tags:
+  - mvp
+  - roadmap
+  - scope
+- id: SR-016
+  type: system
+  title: Test strategy and quality assurance plan
+  file: design/04_test_strategy.md
+  location:
+    kind: heading
+    path:
+    - Test Strategy Document
+  status: active
+  last_updated: '2025-12-05T15:28:01.990467+00:00'
+  checksum: 2a26a5a8b6c2d2a47ba557527268345e8adbcfe1bdf336843a463464cad6059b
+  llm_generated: false
+  tags:
+  - mvp
+  - qa
+  - testing
 - id: T-025
   type: test
   title: "Test suite for JWTHandler class"
@@ -878,10 +1008,26 @@ nodes:
     - 'Good: Extract specific requirement'
     - Best Practices for LLMs
   status: active
-  last_updated: '2025-12-05T13:01:31.552321+00:00'
+  last_updated: '2025-12-05T15:28:01.961746+00:00'
   checksum: 0f3b10acc82b01a8bc93857f285a2680cccc8e9b8132b25185ef2118f54f3e80
   llm_generated: false
   tags: []
+- id: T-026
+  type: test
+  title: Comprehensive test cases plan
+  file: design/05_test_cases_plan.md
+  location:
+    kind: heading
+    path:
+    - Test Cases Plan
+  status: active
+  last_updated: '2025-12-05T15:28:01.986898+00:00'
+  checksum: b49e83c1022b3d6a2e807c944feb7a423a2f05ec59dc703fca83ecb0c47c38fc
+  llm_generated: false
+  tags:
+  - mvp
+  - qa
+  - test-cases
 - id: TEST-001
   type: test
   title: Unit Test for Login
@@ -892,314 +1038,269 @@ nodes:
     - Design Document
     - 'Example 5: Default Values'
   status: active
-  last_updated: '2025-12-05T13:01:31.565420+00:00'
+  last_updated: '2025-12-05T15:28:01.981334+00:00'
   checksum: 0125d523122e8815b4268ad2d9fa84fcf7cea303b2d2514b772c71ac9775f053
   llm_generated: false
   tags:
   - unit-test
 links:
-- from: AR-001
-  to: C-124
+- from: AR-003
+  to: AR-004
   relation_type: implements
   sync_status: ok
-  last_checked: '2025-12-05T13:55:56.567583+00:00'
-- from: AR-001
-  to: C-125
+  last_checked: '2025-12-05T15:28:03.083936+00:00'
+- from: AR-003
+  to: AR-005
   relation_type: implements
   sync_status: ok
-  last_checked: '2025-12-05T13:55:56.876385+00:00'
-- from: AR-002
-  to: C-102
-  relation_type: implements
-  sync_status: ok
-  last_checked: '2025-12-05T13:55:57.256304+00:00'
+  last_checked: '2025-12-05T15:28:03.083936+00:00'
 - from: BR-001
-  to: SR-001
+  to: BR-002
   relation_type: refines
   sync_status: ok
-  last_checked: '2025-12-05T13:04:00.510580+00:00'
-- from: BR-001
-  to: SR-002
-  relation_type: refines
-  sync_status: ok
-  last_checked: '2025-12-05T13:55:42.331910+00:00'
+  last_checked: '2025-12-05T15:28:03.083936+00:00'
 - from: BR-001
   to: SR-010
   relation_type: refines
   sync_status: ok
-  last_checked: '2025-12-05T13:04:00.814264+00:00'
-- from: BR-001
-  to: SR-011
-  relation_type: refines
-  sync_status: ok
-  last_checked: '2025-12-05T13:55:42.633083+00:00'
+  last_checked: '2025-12-05T15:29:20.413057+00:00'
 - from: BR-001
   to: SR-012
   relation_type: refines
   sync_status: ok
-  last_checked: '2025-12-05T13:04:01.150216+00:00'
+  last_checked: '2025-12-05T15:28:03.083936+00:00'
 - from: BR-001
   to: SR-013
   relation_type: refines
   sync_status: ok
-  last_checked: '2025-12-05T13:04:01.472032+00:00'
+  last_checked: '2025-12-05T15:28:03.083936+00:00'
 - from: BR-001
-  to: TEST-001
-  relation_type: tests
+  to: SR-015
+  relation_type: refines
   sync_status: ok
-  last_checked: '2025-12-05T13:55:42.936855+00:00'
+  last_checked: '2025-12-05T15:28:03.083936+00:00'
 - from: C-022
   to: C-023
   relation_type: refines
   sync_status: ok
-  last_checked: '2025-12-05T13:01:32.289348+00:00'
+  last_checked: '2025-12-05T15:28:03.083936+00:00'
 - from: C-050
   to: T-025
   relation_type: tests
   sync_status: ok
-  last_checked: '2025-12-05T13:01:32.289348+00:00'
+  last_checked: '2025-12-05T15:28:03.083936+00:00'
 - from: C-050
   to: T-025
   relation_type: tests
   sync_status: ok
-  last_checked: '2025-12-05T13:01:32.289348+00:00'
-- from: SR-001
-  to: AR-001
-  relation_type: refines
-  sync_status: ok
-  last_checked: '2025-12-05T13:04:03.504276+00:00'
+  last_checked: '2025-12-05T15:28:03.083936+00:00'
 - from: SR-002
   to: AR-002
   relation_type: refines
   sync_status: ok
-  last_checked: '2025-12-05T13:04:03.811267+00:00'
+  last_checked: '2025-12-05T15:29:20.829886+00:00'
 - from: SR-010
   to: C-019
   relation_type: implements
   sync_status: ok
-  last_checked: '2025-12-05T13:04:06.921225+00:00'
+  last_checked: '2025-12-05T15:29:21.214043+00:00'
 - from: SR-011
   to: C-021
   relation_type: implements
   sync_status: ok
-  last_checked: '2025-12-05T13:01:32.289348+00:00'
+  last_checked: '2025-12-05T15:28:03.083936+00:00'
 - from: SR-012
-  to: C-002
-  relation_type: implements
+  to: AR-003
+  relation_type: refines
   sync_status: ok
-  last_checked: '2025-12-05T13:55:23.752374+00:00'
-- from: SR-012
-  to: C-020
-  relation_type: implements
-  sync_status: ok
-  last_checked: '2025-12-05T13:55:24.691755+00:00'
-- from: SR-012
-  to: C-022
-  relation_type: implements
-  sync_status: ok
-  last_checked: '2025-12-05T13:55:25.052284+00:00'
+  last_checked: '2025-12-05T15:28:03.083936+00:00'
 - from: SR-012
   to: C-024
   relation_type: implements
   sync_status: ok
-  last_checked: '2025-12-05T13:01:32.289348+00:00'
-- from: SR-012
-  to: C-026
-  relation_type: implements
-  sync_status: ok
-  last_checked: '2025-12-05T13:55:25.453999+00:00'
-- from: SR-012
-  to: C-028
-  relation_type: implements
-  sync_status: ok
-  last_checked: '2025-12-05T13:55:33.944715+00:00'
-- from: SR-012
-  to: C-030
-  relation_type: implements
-  sync_status: ok
-  last_checked: '2025-12-05T13:55:34.548045+00:00'
-- from: SR-012
-  to: C-050
-  relation_type: implements
-  sync_status: ok
-  last_checked: '2025-12-05T13:55:34.900840+00:00'
-- from: SR-012
-  to: C-051
-  relation_type: implements
-  sync_status: ok
-  last_checked: '2025-12-05T13:55:35.267758+00:00'
-- from: SR-012
-  to: C-052
-  relation_type: implements
-  sync_status: ok
-  last_checked: '2025-12-05T13:55:41.967823+00:00'
+  last_checked: '2025-12-05T15:28:03.083936+00:00'
 - from: SR-012
   to: C-100
   relation_type: implements
   sync_status: ok
-  last_checked: '2025-12-05T13:34:30.695982+00:00'
+  last_checked: '2025-12-05T15:28:03.083936+00:00'
 - from: SR-012
   to: C-101
   relation_type: implements
   sync_status: ok
-  last_checked: '2025-12-05T13:34:30.695982+00:00'
+  last_checked: '2025-12-05T15:28:03.083936+00:00'
 - from: SR-012
   to: C-102
   relation_type: implements
   sync_status: ok
-  last_checked: '2025-12-05T13:34:30.695982+00:00'
+  last_checked: '2025-12-05T15:28:03.083936+00:00'
 - from: SR-012
   to: C-103
   relation_type: implements
   sync_status: ok
-  last_checked: '2025-12-05T13:34:30.695982+00:00'
+  last_checked: '2025-12-05T15:28:03.083936+00:00'
 - from: SR-012
   to: C-104
   relation_type: implements
   sync_status: ok
-  last_checked: '2025-12-05T13:34:30.695982+00:00'
+  last_checked: '2025-12-05T15:28:03.083936+00:00'
 - from: SR-012
   to: C-105
   relation_type: implements
   sync_status: ok
-  last_checked: '2025-12-05T13:34:30.695982+00:00'
+  last_checked: '2025-12-05T15:28:03.083936+00:00'
 - from: SR-012
   to: C-106
   relation_type: implements
   sync_status: ok
-  last_checked: '2025-12-05T13:34:30.695982+00:00'
+  last_checked: '2025-12-05T15:28:03.083936+00:00'
 - from: SR-012
   to: C-107
   relation_type: implements
   sync_status: ok
-  last_checked: '2025-12-05T13:34:30.695982+00:00'
+  last_checked: '2025-12-05T15:28:03.083936+00:00'
 - from: SR-012
   to: C-108
   relation_type: implements
   sync_status: ok
-  last_checked: '2025-12-05T13:34:30.695982+00:00'
+  last_checked: '2025-12-05T15:28:03.083936+00:00'
 - from: SR-012
   to: C-109
   relation_type: implements
   sync_status: ok
-  last_checked: '2025-12-05T13:34:30.695982+00:00'
+  last_checked: '2025-12-05T15:28:03.083936+00:00'
 - from: SR-012
   to: C-110
   relation_type: implements
   sync_status: ok
-  last_checked: '2025-12-05T13:34:30.695982+00:00'
+  last_checked: '2025-12-05T15:28:03.083936+00:00'
 - from: SR-012
   to: C-111
   relation_type: implements
   sync_status: ok
-  last_checked: '2025-12-05T13:34:30.695982+00:00'
+  last_checked: '2025-12-05T15:28:03.083936+00:00'
 - from: SR-012
   to: C-112
   relation_type: implements
   sync_status: ok
-  last_checked: '2025-12-05T13:34:30.695982+00:00'
+  last_checked: '2025-12-05T15:28:03.083936+00:00'
 - from: SR-012
   to: C-113
   relation_type: implements
   sync_status: ok
-  last_checked: '2025-12-05T13:34:30.695982+00:00'
+  last_checked: '2025-12-05T15:28:03.083936+00:00'
 - from: SR-012
   to: C-114
   relation_type: implements
   sync_status: ok
-  last_checked: '2025-12-05T13:34:30.695982+00:00'
+  last_checked: '2025-12-05T15:28:03.083936+00:00'
 - from: SR-012
   to: C-115
   relation_type: implements
   sync_status: ok
-  last_checked: '2025-12-05T13:34:30.695982+00:00'
+  last_checked: '2025-12-05T15:28:03.083936+00:00'
 - from: SR-012
   to: C-116
   relation_type: implements
   sync_status: ok
-  last_checked: '2025-12-05T13:34:30.695982+00:00'
+  last_checked: '2025-12-05T15:28:03.083936+00:00'
 - from: SR-012
   to: C-117
   relation_type: implements
   sync_status: ok
-  last_checked: '2025-12-05T13:34:30.695982+00:00'
+  last_checked: '2025-12-05T15:28:03.083936+00:00'
 - from: SR-012
   to: C-118
   relation_type: implements
   sync_status: ok
-  last_checked: '2025-12-05T13:34:30.695982+00:00'
+  last_checked: '2025-12-05T15:28:03.083936+00:00'
 - from: SR-012
   to: C-119
   relation_type: implements
   sync_status: ok
-  last_checked: '2025-12-05T13:34:30.695982+00:00'
+  last_checked: '2025-12-05T15:28:03.083936+00:00'
 - from: SR-012
   to: C-120
   relation_type: implements
   sync_status: ok
-  last_checked: '2025-12-05T13:34:30.695982+00:00'
+  last_checked: '2025-12-05T15:28:03.083936+00:00'
 - from: SR-012
   to: C-121
   relation_type: implements
   sync_status: ok
-  last_checked: '2025-12-05T13:34:30.695982+00:00'
+  last_checked: '2025-12-05T15:28:03.083936+00:00'
 - from: SR-012
   to: C-122
   relation_type: implements
   sync_status: ok
-  last_checked: '2025-12-05T13:34:30.695982+00:00'
+  last_checked: '2025-12-05T15:28:03.083936+00:00'
 - from: SR-012
   to: C-123
   relation_type: implements
   sync_status: ok
-  last_checked: '2025-12-05T13:40:18.380937+00:00'
+  last_checked: '2025-12-05T15:28:03.083936+00:00'
 - from: SR-012
   to: C-124
   relation_type: implements
   sync_status: ok
-  last_checked: '2025-12-05T13:34:30.695982+00:00'
+  last_checked: '2025-12-05T15:28:03.083936+00:00'
 - from: SR-012
   to: C-125
   relation_type: implements
   sync_status: ok
-  last_checked: '2025-12-05T13:34:30.695982+00:00'
+  last_checked: '2025-12-05T15:28:03.083936+00:00'
 - from: SR-012
   to: C-126
   relation_type: implements
   sync_status: ok
-  last_checked: '2025-12-05T13:34:30.695982+00:00'
+  last_checked: '2025-12-05T15:28:03.083936+00:00'
 - from: SR-012
   to: C-127
   relation_type: implements
   sync_status: ok
-  last_checked: '2025-12-05T13:34:30.695982+00:00'
+  last_checked: '2025-12-05T15:28:03.083936+00:00'
+- from: SR-012
+  to: SR-014
+  relation_type: refines
+  sync_status: ok
+  last_checked: '2025-12-05T15:28:03.083936+00:00'
+- from: SR-012
+  to: SR-016
+  relation_type: refines
+  sync_status: ok
+  last_checked: '2025-12-05T15:28:03.083936+00:00'
 - from: SR-013
   to: C-016
   relation_type: implements
   sync_status: ok
-  last_checked: '2025-12-05T13:04:06.584866+00:00'
-- from: SR-013
-  to: C-017
-  relation_type: implements
-  sync_status: ok
-  last_checked: '2025-12-05T13:55:24.043198+00:00'
-- from: SR-013
-  to: C-018
-  relation_type: implements
-  sync_status: ok
-  last_checked: '2025-12-05T13:55:24.394389+00:00'
+  last_checked: '2025-12-05T15:28:03.083936+00:00'
 - from: SR-013
   to: C-025
   relation_type: implements
   sync_status: ok
-  last_checked: '2025-12-05T13:04:07.234718+00:00'
-- from: SR-013
+  last_checked: '2025-12-05T15:28:03.083936+00:00'
+- from: SR-014
+  to: C-026
+  relation_type: implements
+  sync_status: ok
+  last_checked: '2025-12-05T15:28:03.083936+00:00'
+- from: SR-015
   to: C-027
   relation_type: implements
   sync_status: ok
-  last_checked: '2025-12-05T13:55:33.590756+00:00'
-- from: SR-013
-  to: C-029
+  last_checked: '2025-12-05T15:28:03.083936+00:00'
+- from: SR-015
+  to: C-050
   relation_type: implements
   sync_status: ok
-  last_checked: '2025-12-05T13:55:34.254607+00:00'
+  last_checked: '2025-12-05T15:28:03.083936+00:00'
+- from: SR-016
+  to: C-028
+  relation_type: implements
+  sync_status: ok
+  last_checked: '2025-12-05T15:28:03.083936+00:00'
+- from: SR-016
+  to: T-026
+  relation_type: tests
+  sync_status: ok
+  last_checked: '2025-12-05T15:28:03.083936+00:00'

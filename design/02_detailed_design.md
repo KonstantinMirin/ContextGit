@@ -1,3 +1,14 @@
+---
+contextgit:
+  id: AR-004
+  type: architecture
+  title: Detailed software design with class specifications
+  status: active
+  upstream:
+    - AR-003
+  tags: [mvp, design, classes]
+---
+
 # Detailed Software Design Document
 
 ## 1. Introduction
