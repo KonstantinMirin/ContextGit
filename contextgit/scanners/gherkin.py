@@ -9,7 +9,8 @@ contextgit:
   tags: [scanners, gherkin, cucumber, fr-14, multi-format]
 
 Extracts contextgit metadata from Gherkin feature files using:
-- Comment blocks with '# @contextgit' marker followed by YAML lines
+- Multi-line: '# @contextgit' marker followed by YAML lines
+- Single-line: '# @contextgit id=X type=Y title=Z' key=value format
 """
 
 import re
@@ -65,36 +66,21 @@ class GherkinScanner(FileScanner):
     def _parse_comment_blocks(self, content: str) -> List[ExtractedMetadata]:
         """Parse comment blocks for contextgit metadata.
 
-        Looks for comment blocks like:
-        # @contextgit
-        # id: T-001
-        # type: test
-        # title: Login Feature Tests
+        Supports two formats:
 
-        Handles both file-level (no indentation) and indented blocks
-        (before Scenario).
-
-        Example:
+        1. Multi-line YAML format:
             # @contextgit
             # id: T-001
             # type: test
-            # title: Feature Level
+            # title: Login Feature Tests
 
-            Feature: User Login
+        2. Single-line key=value format:
+            # @contextgit id=T-001 type=test title="Login Feature Tests"
 
-              # @contextgit
-              # id: T-002
-              # type: test
-              # title: Scenario Level
-
-              Scenario: Successful login
+        Handles both file-level (no indentation) and indented blocks.
         """
         blocks = []
 
-        # Find comment blocks starting with '# @contextgit'
-        # Pattern: captures optional leading indentation, then # @contextgit marker,
-        # followed by subsequent comment lines with the same indentation
-        # Using a line-by-line approach for better indentation handling
         lines = content.split('\n')
         i = 0
 
@@ -103,80 +89,148 @@ class GherkinScanner(FileScanner):
             stripped = line.lstrip()
 
             # Check for @contextgit marker
-            if stripped.startswith('# @contextgit') or stripped == '#@contextgit':
-                # Found a contextgit block
+            if stripped.startswith('# @contextgit') or stripped.startswith('#@contextgit'):
                 line_number = i + 1  # 1-based line numbers
-                indent = len(line) - len(stripped)
-                raw_lines = [line]
-                yaml_lines = []
 
-                # Collect subsequent comment lines
-                j = i + 1
-                while j < len(lines):
-                    next_line = lines[j]
-                    next_stripped = next_line.lstrip()
+                # Extract content after the marker
+                if stripped.startswith('# @contextgit'):
+                    after_marker = stripped[13:].strip()  # len('# @contextgit') = 13
+                else:
+                    after_marker = stripped[12:].strip()  # len('#@contextgit') = 12
 
-                    # Check if this is a continuation comment line
-                    # Must start with # and have same or greater indentation
-                    if not next_stripped.startswith('#'):
-                        break
-
-                    next_indent = len(next_line) - len(next_stripped)
-
-                    # Allow same indentation or slightly more (for YAML structure)
-                    if next_indent < indent:
-                        break
-
-                    raw_lines.append(next_line)
-
-                    # Extract YAML content from comment
-                    # Remove '# ' or '#' prefix
-                    if next_stripped.startswith('# '):
-                        yaml_content = next_stripped[2:]
-                    elif next_stripped.startswith('#'):
-                        yaml_content = next_stripped[1:]
-                    else:
-                        yaml_content = next_stripped
-
-                    # Skip empty comment lines but don't break
-                    if yaml_content.strip():
-                        yaml_lines.append(yaml_content)
-
-                    j += 1
-
-                raw_content = '\n'.join(raw_lines)
-                yaml_content = '\n'.join(yaml_lines)
-
-                if yaml_content.strip():
+                # Check if this is single-line format (has key=value on same line)
+                if after_marker and '=' in after_marker:
+                    # Single-line key=value format
                     try:
-                        data = self.yaml.load_yaml(yaml_content)
-                        metadata = self._extract_metadata(data, line_number, raw_content)
+                        data = self._parse_single_line(after_marker)
+                        metadata = self._extract_metadata(data, line_number, line, single_line=True)
                         blocks.append(metadata)
                     except Exception as e:
                         raise InvalidMetadataError(
-                            f"Invalid comment block at line {line_number}: {e}"
+                            f"Invalid single-line metadata at line {line_number}: {e}"
                         )
+                    i += 1
+                else:
+                    # Multi-line YAML format
+                    indent = len(line) - len(stripped)
+                    raw_lines = [line]
+                    yaml_lines = []
 
-                i = j
+                    # Collect subsequent comment lines
+                    j = i + 1
+                    while j < len(lines):
+                        next_line = lines[j]
+                        next_stripped = next_line.lstrip()
+
+                        # Check if this is a continuation comment line
+                        if not next_stripped.startswith('#'):
+                            break
+
+                        next_indent = len(next_line) - len(next_stripped)
+
+                        # Allow same indentation or slightly more (for YAML structure)
+                        if next_indent < indent:
+                            break
+
+                        raw_lines.append(next_line)
+
+                        # Extract YAML content from comment
+                        if next_stripped.startswith('# '):
+                            yaml_content = next_stripped[2:]
+                        elif next_stripped.startswith('#'):
+                            yaml_content = next_stripped[1:]
+                        else:
+                            yaml_content = next_stripped
+
+                        if yaml_content.strip():
+                            yaml_lines.append(yaml_content)
+
+                        j += 1
+
+                    raw_content = '\n'.join(raw_lines)
+                    yaml_content = '\n'.join(yaml_lines)
+
+                    if yaml_content.strip():
+                        try:
+                            data = self.yaml.load_yaml(yaml_content)
+                            metadata = self._extract_metadata(data, line_number, raw_content)
+                            blocks.append(metadata)
+                        except Exception as e:
+                            raise InvalidMetadataError(
+                                f"Invalid comment block at line {line_number}: {e}"
+                            )
+
+                    i = j
             else:
                 i += 1
 
         return blocks
 
+    def _parse_single_line(self, line: str) -> dict:
+        """Parse single-line key=value format.
+
+        Supports formats like:
+            id=T-001 type=test title="My Title" upstream=[SR-001,SR-002]
+
+        Args:
+            line: The content after '# @contextgit '
+
+        Returns:
+            Dictionary with parsed key-value pairs
+        """
+        data = {}
+
+        # Pattern to match key=value pairs
+        # Handles: key=value, key="quoted value", key=[list,items]
+        pattern = r'(\w+)=(?:"([^"]*)"|(\[[^\]]*\])|(\S+))'
+
+        for match in re.finditer(pattern, line):
+            key = match.group(1)
+            # Check which group matched
+            if match.group(2) is not None:
+                # Quoted value
+                value = match.group(2)
+            elif match.group(3) is not None:
+                # List value [item1,item2]
+                list_str = match.group(3)
+                # Parse list: remove brackets, split by comma, strip whitespace
+                items = list_str[1:-1].split(',')
+                value = [item.strip() for item in items if item.strip()]
+            else:
+                # Unquoted value
+                value = match.group(4)
+
+            data[key] = value
+
+        return data
+
     def _extract_metadata(
         self,
         data: dict,
         line_number: int,
-        raw_content: str = ""
+        raw_content: str = "",
+        single_line: bool = False
     ) -> ExtractedMetadata:
-        """Extract and validate metadata from parsed YAML."""
+        """Extract and validate metadata from parsed YAML.
+
+        Args:
+            data: Parsed metadata dictionary
+            line_number: Line number where metadata starts
+            raw_content: Raw content string
+            single_line: If True, title is optional (defaults to id)
+        """
         # Required fields
         if 'id' not in data:
             raise InvalidMetadataError(f"Missing 'id' field at line {line_number}")
         if 'type' not in data:
             raise InvalidMetadataError(f"Missing 'type' field at line {line_number}")
+
+        # Title is optional for single-line format (defaults to id)
         if 'title' not in data:
-            raise InvalidMetadataError(f"Missing 'title' field at line {line_number}")
+            if single_line:
+                data['title'] = data['id']
+            else:
+                raise InvalidMetadataError(f"Missing 'title' field at line {line_number}")
 
         # Ensure upstream/downstream are lists
         upstream = data.get('upstream', [])

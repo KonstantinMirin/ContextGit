@@ -433,3 +433,321 @@ Feature: Test
         assert len(results) == 1
         assert results[0].id == "T-001"
         assert results[0].title == "Parameterized Login Test"
+
+
+class TestGherkinScannerSingleLine:
+    """Test cases for single-line key=value format."""
+
+    def test_single_line_at_file_start(self, tmp_path):
+        """Test single-line format at file start."""
+        file_path = tmp_path / "test.feature"
+        file_path.write_text("""# @contextgit id=T-001 type=test title="Login Tests"
+
+Feature: User Login
+  Scenario: Login
+    Given setup
+""")
+
+        scanner = GherkinScanner()
+        results = scanner.extract_metadata(file_path)
+
+        assert len(results) == 1
+        assert results[0].id == "T-001"
+        assert results[0].type == "test"
+        assert results[0].title == "Login Tests"
+        assert results[0].line_number == 1
+
+    def test_single_line_indented(self, tmp_path):
+        """Test single-line format with indentation (before Scenario)."""
+        file_path = tmp_path / "test.feature"
+        file_path.write_text("""Feature: User Login
+
+  # @contextgit id=T-002 type=test title="Valid Login"
+
+  Scenario: Successful login
+    Given I am on login page
+""")
+
+        scanner = GherkinScanner()
+        results = scanner.extract_metadata(file_path)
+
+        assert len(results) == 1
+        assert results[0].id == "T-002"
+        assert results[0].title == "Valid Login"
+
+    def test_single_line_with_upstream(self, tmp_path):
+        """Test single-line format with upstream list."""
+        file_path = tmp_path / "test.feature"
+        file_path.write_text("""# @contextgit id=T-001 type=test title="Test" upstream=[SR-001]
+
+Feature: Test
+""")
+
+        scanner = GherkinScanner()
+        results = scanner.extract_metadata(file_path)
+
+        assert len(results) == 1
+        assert results[0].upstream == ["SR-001"]
+
+    def test_single_line_with_multiple_upstream(self, tmp_path):
+        """Test single-line format with multiple upstream values."""
+        file_path = tmp_path / "test.feature"
+        file_path.write_text("""# @contextgit id=T-001 type=test title="Test" upstream=[SR-001,SR-002,SR-003]
+
+Feature: Test
+""")
+
+        scanner = GherkinScanner()
+        results = scanner.extract_metadata(file_path)
+
+        assert len(results) == 1
+        assert results[0].upstream == ["SR-001", "SR-002", "SR-003"]
+
+    def test_single_line_with_downstream(self, tmp_path):
+        """Test single-line format with downstream."""
+        file_path = tmp_path / "test.feature"
+        file_path.write_text("""# @contextgit id=T-001 type=test title="Test" downstream=[T-002]
+
+Feature: Test
+""")
+
+        scanner = GherkinScanner()
+        results = scanner.extract_metadata(file_path)
+
+        assert len(results) == 1
+        assert results[0].downstream == ["T-002"]
+
+    def test_single_line_quoted_title_with_spaces(self, tmp_path):
+        """Test single-line format with quoted title containing spaces."""
+        file_path = tmp_path / "test.feature"
+        file_path.write_text("""# @contextgit id=T-001 type=test title="User Login Feature Tests"
+
+Feature: Test
+""")
+
+        scanner = GherkinScanner()
+        results = scanner.extract_metadata(file_path)
+
+        assert len(results) == 1
+        assert results[0].title == "User Login Feature Tests"
+
+    def test_single_line_unquoted_title(self, tmp_path):
+        """Test single-line format with unquoted single-word title."""
+        file_path = tmp_path / "test.feature"
+        file_path.write_text("""# @contextgit id=T-001 type=test title=LoginTests
+
+Feature: Test
+""")
+
+        scanner = GherkinScanner()
+        results = scanner.extract_metadata(file_path)
+
+        assert len(results) == 1
+        assert results[0].title == "LoginTests"
+
+    def test_single_line_no_space_after_hash(self, tmp_path):
+        """Test single-line format without space after hash."""
+        file_path = tmp_path / "test.feature"
+        file_path.write_text("""#@contextgit id=T-001 type=test title="Test"
+
+Feature: Test
+""")
+
+        scanner = GherkinScanner()
+        results = scanner.extract_metadata(file_path)
+
+        assert len(results) == 1
+        assert results[0].id == "T-001"
+
+    def test_single_line_with_status(self, tmp_path):
+        """Test single-line format with status field."""
+        file_path = tmp_path / "test.feature"
+        file_path.write_text("""# @contextgit id=T-001 type=test title="Test" status=draft
+
+Feature: Test
+""")
+
+        scanner = GherkinScanner()
+        results = scanner.extract_metadata(file_path)
+
+        assert len(results) == 1
+        assert results[0].status == "draft"
+
+    def test_single_line_default_status(self, tmp_path):
+        """Test that status defaults to active in single-line format."""
+        file_path = tmp_path / "test.feature"
+        file_path.write_text("""# @contextgit id=T-001 type=test title="Test"
+
+Feature: Test
+""")
+
+        scanner = GherkinScanner()
+        results = scanner.extract_metadata(file_path)
+
+        assert len(results) == 1
+        assert results[0].status == "active"
+
+    def test_single_line_multiple_blocks(self, tmp_path):
+        """Test multiple single-line metadata blocks."""
+        file_path = tmp_path / "test.feature"
+        file_path.write_text("""# @contextgit id=T-001 type=test title="Feature Level"
+
+Feature: Auth
+
+  # @contextgit id=T-002 type=test title="Scenario Level" upstream=[T-001]
+
+  Scenario: Login
+    Given setup
+
+  # @contextgit id=T-003 type=test title="Another Scenario" upstream=[T-001]
+
+  Scenario: Logout
+    Given logged in
+""")
+
+        scanner = GherkinScanner()
+        results = scanner.extract_metadata(file_path)
+
+        assert len(results) == 3
+        assert results[0].id == "T-001"
+        assert results[1].id == "T-002"
+        assert results[1].upstream == ["T-001"]
+        assert results[2].id == "T-003"
+
+    def test_single_line_missing_id(self, tmp_path):
+        """Test error when id is missing in single-line format."""
+        file_path = tmp_path / "test.feature"
+        file_path.write_text("""# @contextgit type=test title="Test"
+
+Feature: Test
+""")
+
+        scanner = GherkinScanner()
+        with pytest.raises(InvalidMetadataError, match="Missing 'id' field"):
+            scanner.extract_metadata(file_path)
+
+    def test_single_line_missing_type(self, tmp_path):
+        """Test error when type is missing in single-line format."""
+        file_path = tmp_path / "test.feature"
+        file_path.write_text("""# @contextgit id=T-001 title="Test"
+
+Feature: Test
+""")
+
+        scanner = GherkinScanner()
+        with pytest.raises(InvalidMetadataError, match="Missing 'type' field"):
+            scanner.extract_metadata(file_path)
+
+    def test_single_line_missing_title_defaults_to_id(self, tmp_path):
+        """Test that missing title defaults to id in single-line format."""
+        file_path = tmp_path / "test.feature"
+        file_path.write_text("""# @contextgit id=T-001 type=test
+
+Feature: Test
+""")
+
+        scanner = GherkinScanner()
+        results = scanner.extract_metadata(file_path)
+
+        assert len(results) == 1
+        assert results[0].id == "T-001"
+        assert results[0].title == "T-001"  # Defaults to id
+
+    def test_single_line_raw_content(self, tmp_path):
+        """Test that raw_content is captured for single-line format."""
+        file_path = tmp_path / "test.feature"
+        file_path.write_text("""# @contextgit id=T-001 type=test title="Test"
+
+Feature: Test
+""")
+
+        scanner = GherkinScanner()
+        results = scanner.extract_metadata(file_path)
+
+        assert len(results) == 1
+        assert "@contextgit" in results[0].raw_content
+        assert "id=T-001" in results[0].raw_content
+
+    def test_mixed_single_and_multiline(self, tmp_path):
+        """Test mixing single-line and multi-line formats in same file."""
+        file_path = tmp_path / "test.feature"
+        file_path.write_text("""# @contextgit
+# id: T-001
+# type: test
+# title: Feature Level (Multiline)
+
+Feature: Auth
+
+  # @contextgit id=T-002 type=test title="Scenario Level (Single)" upstream=[T-001]
+
+  Scenario: Login
+    Given setup
+""")
+
+        scanner = GherkinScanner()
+        results = scanner.extract_metadata(file_path)
+
+        assert len(results) == 2
+        assert results[0].id == "T-001"
+        assert results[0].title == "Feature Level (Multiline)"
+        assert results[1].id == "T-002"
+        assert results[1].title == "Scenario Level (Single)"
+        assert results[1].upstream == ["T-001"]
+
+    def test_single_line_with_tags_list(self, tmp_path):
+        """Test single-line format with tags as list."""
+        file_path = tmp_path / "test.feature"
+        file_path.write_text("""# @contextgit id=T-001 type=test title="Test" tags=[smoke,regression]
+
+Feature: Test
+""")
+
+        scanner = GherkinScanner()
+        results = scanner.extract_metadata(file_path)
+
+        assert len(results) == 1
+        assert results[0].tags == ["smoke", "regression"]
+
+    def test_single_line_minimal_with_upstream(self, tmp_path):
+        """Test minimal single-line format with just id, type, and upstream."""
+        file_path = tmp_path / "test.feature"
+        file_path.write_text("""# @contextgit id=T-UC-001 type=test upstream=[BR-UC-001]
+
+Feature: Test
+""")
+
+        scanner = GherkinScanner()
+        results = scanner.extract_metadata(file_path)
+
+        assert len(results) == 1
+        assert results[0].id == "T-UC-001"
+        assert results[0].type == "test"
+        assert results[0].title == "T-UC-001"  # Defaults to id
+        assert results[0].upstream == ["BR-UC-001"]
+
+    def test_single_line_inline_before_scenario(self, tmp_path):
+        """Test inline single-line tagging before scenarios."""
+        file_path = tmp_path / "test.feature"
+        file_path.write_text("""Feature: User Cases
+
+  # @contextgit id=T-UC-001 type=test upstream=[BR-UC-001]
+  Scenario: First use case
+    Given setup
+    When action
+    Then result
+
+  # @contextgit id=T-UC-002 type=test upstream=[BR-UC-001,BR-UC-002]
+  Scenario: Second use case
+    Given another setup
+    When another action
+    Then another result
+""")
+
+        scanner = GherkinScanner()
+        results = scanner.extract_metadata(file_path)
+
+        assert len(results) == 2
+        assert results[0].id == "T-UC-001"
+        assert results[0].upstream == ["BR-UC-001"]
+        assert results[1].id == "T-UC-002"
+        assert results[1].upstream == ["BR-UC-001", "BR-UC-002"]
