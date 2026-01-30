@@ -8,6 +8,7 @@ from contextgit.scanners import (
     MarkdownScanner,
     PythonScanner,
     JavaScriptScanner,
+    GherkinScanner,
     SCANNERS
 )
 
@@ -66,6 +67,16 @@ class TestScannerRegistry:
         assert scanner is not None
         assert isinstance(scanner, JavaScriptScanner)
 
+    def test_get_scanner_gherkin(self):
+        """Test getting scanner for Gherkin feature files."""
+        scanner = get_scanner(Path("login.feature"))
+        assert scanner is not None
+        assert isinstance(scanner, GherkinScanner)
+
+        scanner = get_scanner(Path("features/auth.feature"))
+        assert scanner is not None
+        assert isinstance(scanner, GherkinScanner)
+
     def test_get_scanner_unsupported(self):
         """Test getting scanner for unsupported file types."""
         assert get_scanner(Path("file.txt")) is None
@@ -102,6 +113,7 @@ class TestScannerRegistry:
         assert '.tsx' in extensions
         assert '.mjs' in extensions
         assert '.cjs' in extensions
+        assert '.feature' in extensions
 
     def test_scanners_dict_complete(self):
         """Test that SCANNERS dict is properly populated."""
@@ -110,6 +122,7 @@ class TestScannerRegistry:
         assert '.py' in SCANNERS
         assert '.js' in SCANNERS
         assert '.ts' in SCANNERS
+        assert '.feature' in SCANNERS
 
         # All entries should be scanner instances
         for ext, scanner in SCANNERS.items():

@@ -11,17 +11,19 @@ from contextgit.scanners.base import FileScanner
 from contextgit.scanners.markdown import MarkdownScanner
 from contextgit.scanners.python import PythonScanner
 from contextgit.scanners.javascript import JavaScriptScanner
+from contextgit.scanners.gherkin import GherkinScanner
 
 
 # Initialize scanners
 _markdown_scanner = MarkdownScanner()
 _python_scanner = PythonScanner()
 _javascript_scanner = JavaScriptScanner()
+_gherkin_scanner = GherkinScanner()
 
 # Build scanner registry mapping extensions to scanners
 SCANNERS: Dict[str, FileScanner] = {}
 
-for scanner in [_markdown_scanner, _python_scanner, _javascript_scanner]:
+for scanner in [_markdown_scanner, _python_scanner, _javascript_scanner, _gherkin_scanner]:
     for ext in scanner.supported_extensions:
         SCANNERS[ext.lower()] = scanner
 
@@ -57,6 +59,7 @@ __all__ = [
     'MarkdownScanner',
     'PythonScanner',
     'JavaScriptScanner',
+    'GherkinScanner',
     'get_scanner',
     'get_supported_extensions',
     'SCANNERS',
